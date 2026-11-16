@@ -182,7 +182,10 @@ export default function DiraMap(props: DiraMapProps) {
         store.set(key, entry);
       }
       const { node } = entry;
-      node.className = `dira-pin${item.group !== "place" ? " is-small" : ""}${item.faded ? " is-faded" : ""}`;
+      // Keep maplibre's own marker classes (they position the pin); only toggle ours.
+      node.classList.add("dira-pin");
+      node.classList.toggle("is-small", item.group !== "place");
+      node.classList.toggle("is-faded", !!item.faded);
       node.innerHTML = pinSvg(item.kind);
       node.setAttribute("aria-label", item.label);
       node.setAttribute("aria-pressed", String(props.selectedId === key));
