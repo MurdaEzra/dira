@@ -44,7 +44,7 @@ type Layer = "places" | "barriers" | "ramps" | "heat";
 const SEV_WEIGHT = { low: 0.25, medium: 0.5, high: 0.8, blocking: 1 };
 
 function Home() {
-  const { t, display, hydrated, onboarded, here, setHere, announce } = usePrefs();
+  const { t, display, hydrated, onboarded, here, setHere, announce, profile } = usePrefs();
   const search = Route.useSearch();
   const navigate = useNavigate();
   const scored = useScoredPlaces();
@@ -250,7 +250,7 @@ function Home() {
                     </div>
                   </div>
                   <ul className="col-span-2 mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm">
-                    {topFeatures(selPlace.place, usePrefsProfileFallback(), 3).map((f) => (
+                    {topFeatures(selPlace.place, profile, 3).map((f) => (
                       <li key={f.key} className="inline-flex items-center gap-2">
                         <StatusMark status={f.status} withLabel={false} />
                         {t.feature[f.key]}
@@ -380,11 +380,6 @@ function Home() {
       </div>
     </div>
   );
-}
-
-/** Small helper so the selected strip ranks features by the current profile. */
-function usePrefsProfileFallback() {
-  return usePrefs().profile;
 }
 
 function MapFallback({ label }: { label: string }) {
