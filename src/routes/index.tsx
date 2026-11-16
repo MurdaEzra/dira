@@ -162,7 +162,7 @@ function Home() {
   const selRamp = group === "ramp" ? ACCESS_POINTS.find((r) => r.id === id) : undefined;
 
   return (
-    <div className="relative h-stage overflow-hidden lg:grid lg:grid-cols-[27rem_1fr]">
+    <div className="relative h-stage overflow-hidden lg:grid lg:grid-cols-[27rem_1fr] lg:grid-rows-[minmax(0,1fr)]">
       {/* Panel — bottom sheet on phones, side column on desktop */}
       <section
         aria-label={t.map.nearby}
