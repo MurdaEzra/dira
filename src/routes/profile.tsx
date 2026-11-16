@@ -109,15 +109,15 @@ function Profile() {
                   className={cn(
                     "flex min-h-20 flex-col items-start justify-between gap-3 rounded-2xl border-[length:var(--rule-w)] p-4 text-left font-bold",
                     display.theme === v ? "border-signal ring-[3px] ring-signal" : "border-rule",
-                    v === "light" && "bg-[oklch(0.968_0.045_142.2)] text-[oklch(0.387_0.066_226.1)]",
-                    v === "dark" && "bg-[oklch(0.24_0.045_228)] text-[oklch(0.968_0.045_142.2)]",
-                    v === "hc" && "bg-[oklch(0.12_0.01_226)] text-[oklch(1_0_0)]",
+                    v === "light" && "swatch-light",
+                    v === "dark" && "swatch-dark",
+                    v === "hc" && "swatch-hc",
                   )}
                 >
                   <span aria-hidden className="flex gap-1">
                     <span className="size-4 rounded-full bg-current" />
-                    <span className="size-4 rounded-full bg-[oklch(0.55_0.095_210.1)]" />
-                    <span className="size-4 rounded-full bg-[oklch(0.675_0.187_18.3)]" />
+                    <span className="size-4 rounded-full dot-teal" />
+                    <span className="size-4 rounded-full dot-coral" />
                   </span>
                   {label}
                 </button>

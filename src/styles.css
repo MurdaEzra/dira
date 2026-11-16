@@ -409,3 +409,23 @@
 .hc .maplibregl-ctrl-icon {
   filter: invert(1);
 }
+
+/* Fixed theme previews for the colour picker (show each theme regardless of the active one) */
+@utility swatch-light {
+  background: oklch(0.968 0.045 142.2);
+  color: oklch(0.387 0.066 226.1);
+}
+@utility swatch-dark {
+  background: oklch(0.24 0.045 228);
+  color: oklch(0.968 0.045 142.2);
+}
+@utility swatch-hc {
+  background: oklch(0.12 0.01 226);
+  color: oklch(1 0 0);
+}
+@utility dot-teal {
+  background: oklch(0.55 0.095 210.1);
+}
+@utility dot-coral {
+  background: oklch(0.675 0.187 18.3);
+}
