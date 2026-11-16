@@ -392,3 +392,20 @@
 @utility pb-nav {
   padding-bottom: calc(var(--nav-h) + 2rem);
 }
+
+/* Map controls: 48px targets in DIRA colours */
+.maplibregl-ctrl-group {
+  background: var(--color-background) !important;
+  border: var(--rule-w) solid var(--color-rule);
+  border-radius: 999px !important;
+  overflow: hidden;
+  box-shadow: none !important;
+}
+.maplibregl-ctrl-group button {
+  width: 3rem !important;
+  height: 3rem !important;
+}
+.dark .maplibregl-ctrl-icon,
+.hc .maplibregl-ctrl-icon {
+  filter: invert(1);
+}
