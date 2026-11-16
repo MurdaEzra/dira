@@ -1,4 +1,4 @@
-import { BadgeCheck, CircleDashed, History, Users, Check, X, HelpCircle, Contrast } from "lucide-react";
+import { BadgeCheck, CircleDashed, History, Users, Check, X, HelpCircle, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { fmt, type Dict } from "@/lib/i18n";
 import { needsRecheck, isExpired, type Tier } from "@/lib/confidence";
@@ -50,8 +50,8 @@ export function EvidenceLine({ e, className }: { e: Evidence; className?: string
 
 const STATUS_STYLE: Record<FeatureStatus, { Icon: typeof Check; box: string }> = {
   yes: { Icon: Check, box: "bg-signal text-signal-foreground" },
-  partial: { Icon: Contrast, box: "bg-caution text-caution-foreground" },
-  no: { Icon: X, box: "hatch text-foreground border-[length:var(--rule-w)] border-coral" },
+  partial: { Icon: Minus, box: "bg-caution text-caution-foreground" },
+  no: { Icon: X, box: "bg-coral text-coral-foreground" },
   unknown: { Icon: HelpCircle, box: "border-[length:var(--rule-w)] border-dashed border-muted-foreground text-muted-foreground" },
 };
 

@@ -16,8 +16,11 @@ export function placeTier(place: Place): Tier {
   return best;
 }
 
+/** Freshest evidence among the features that set the place's tier, so the label and the line agree. */
 export function lastVerified(place: Place) {
-  const known = place.features.filter((f) => f.status !== "unknown");
+  const t = placeTier(place);
+  const sameTier = place.features.filter((f) => f.status !== "unknown" && tier(f.evidence) === t);
+  const known = sameTier.length ? sameTier : place.features.filter((f) => f.status !== "unknown");
   const list = known.length ? known : place.features;
   const freshest = list.reduce((a, b) => (b.evidence.daysAgo < a.evidence.daysAgo ? b : a));
   return freshest.evidence;
