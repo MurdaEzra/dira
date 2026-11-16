@@ -375,3 +375,20 @@
   transition-duration: 0.01ms !important;
   scroll-behavior: auto !important;
 }
+
+/* ---------- App chrome sizing ---------- */
+:root {
+  --header-h: 4rem;
+  --nav-h: 4.5rem;
+}
+@media (min-width: 64rem) {
+  :root {
+    --nav-h: 0rem;
+  }
+}
+@utility h-stage {
+  height: calc(100dvh - var(--header-h) - var(--nav-h));
+}
+@utility pb-nav {
+  padding-bottom: calc(var(--nav-h) + 2rem);
+}
