@@ -42,7 +42,7 @@ function Onboarding() {
     { title: t.onboard.s2title, lede: t.onboard.s2lede, body: <LimitsFields value={profile} onChange={setProfile} /> },
     { title: t.onboard.s3title, lede: t.onboard.s3lede, body: <NeedsFields value={profile} onChange={setProfile} /> },
   ];
-  const cur = steps[step];
+  const cur = steps[step] ?? steps[0]!;
 
   function finish() {
     setOnboarded(true);

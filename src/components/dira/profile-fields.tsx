@@ -87,7 +87,7 @@ function SliderRow({
         min={min}
         max={max}
         step={step}
-        onValueChange={([v]) => onChange(v)}
+        onValueChange={([v]) => onChange(v ?? value)}
         className="mt-2"
       />
       <div className="flex justify-between text-sm text-muted-foreground" aria-hidden>

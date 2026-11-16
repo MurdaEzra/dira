@@ -141,7 +141,7 @@ function Profile() {
               min={100}
               max={200}
               step={10}
-              onValueChange={([v]) => setDisplay({ textScale: v / 100 })}
+              onValueChange={([v]) => setDisplay({ textScale: (v ?? 100) / 100 })}
             />
             <p className="mt-2 font-display text-2xl font-bold" aria-hidden>
               Aa — {t.app.tagline}

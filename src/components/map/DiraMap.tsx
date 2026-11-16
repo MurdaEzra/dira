@@ -21,17 +21,17 @@ export interface MapItem {
   lat: number;
   lng: number;
   label: string;
-  faded?: boolean;
+  faded?: boolean | undefined;
 }
 
 export interface DiraMapProps {
   items: MapItem[];
   heat: { lat: number; lng: number; weight: number }[];
   showHeat: boolean;
-  selectedId?: string;
+  selectedId?: string | undefined;
   onSelect: (item: MapItem) => void;
-  focus?: { lat: number; lng: number; zoom?: number; key: number };
-  me?: { lat: number; lng: number };
+  focus?: { lat: number; lng: number; zoom?: number | undefined; key: number } | undefined;
+  me?: { lat: number; lng: number } | undefined;
   theme: Theme;
   center: { lat: number; lng: number };
   zoom: number;
@@ -45,7 +45,7 @@ const STYLE: Record<Theme, string> = {
 };
 
 /** Map-canvas tints matched to the DIRA palette (map styles need plain colour strings). */
-const TINT: Record<Theme, { land: string; water: string; park: string; heat: string[] }> = {
+const TINT: Record<Theme, { land: string; water: string; park: string; heat: [string, string, string, string] }> = {
   light: { land: "#EEFCEB", water: "#BFD0E2", park: "#D2F3CD", heat: ["#F45B6900", "#F9B4A8", "#F45B69", "#B8283A"] },
   dark: { land: "#0E3341", water: "#173F58", park: "#123F44", heat: ["#F45B6900", "#8A3A4A", "#F45B69", "#FFC2C8"] },
   hc: { land: "#05141A", water: "#0A2A40", park: "#05141A", heat: ["#F45B6900", "#B23A4A", "#FF6F7D", "#FFFFFF"] },

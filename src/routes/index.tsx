@@ -20,7 +20,7 @@ const DiraMap = lazy(() => import("@/components/map/DiraMap"));
 
 export const Route = createFileRoute("/")({
   validateSearch: (s: Record<string, unknown>): { place?: string } =>
-    typeof s.place === "string" ? { place: s.place } : {},
+    typeof s["place"] === "string" ? { place: s["place"] } : {},
   head: () => ({
     meta: [
       { title: "DIRA — Accessible map of Nairobi" },

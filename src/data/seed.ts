@@ -71,7 +71,7 @@ const ROWS: Row[] = [
 
 function evidenceFor(id: string, i: number, sources: string, baseDays: number): Evidence {
   const h = hash(id);
-  const src = SRC[sources[(h + i) % sources.length]];
+  const src = SRC[sources[(h + i) % sources.length] ?? "S"] ?? "community";
   const daysAgo = baseDays + ((i * 37 + h) % 40);
   const confirmations =
     src === "community3" ? 3 + ((h + i) % 6) : src === "osm" || src === "ai" ? 0 : 1 + ((h + i) % 2);
@@ -88,7 +88,7 @@ export const PLACES: Place[] = ROWS.map(([id, name, category, area, lat, lng, fe
   lng,
   features: FEATURE_KEYS.map((key, i) => ({
     key,
-    status: ST[feats[i]],
+    status: ST[feats[i] ?? "U"] ?? "unknown",
     evidence: evidenceFor(id, i, sources, days),
   })),
 }));
