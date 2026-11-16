@@ -87,6 +87,7 @@ type Dict = {
     setProfile: string;
     viewOnMap: string;
     notFound: string;
+    matters: string;
   };
   onboard: {
     step: string;
@@ -305,6 +306,7 @@ const en: Dict = {
     setProfile: "Set your access profile",
     viewOnMap: "View on map",
     notFound: "We couldn't find that place.",
+    matters: "Matters to you",
   },
   onboard: {
     step: "Step",
@@ -523,6 +525,7 @@ const sw: Dict = {
     setProfile: "Weka wasifu wako wa ufikiaji",
     viewOnMap: "Tazama kwenye ramani",
     notFound: "Hatukupata eneo hilo.",
+    matters: "Ni muhimu kwako",
   },
   onboard: {
     step: "Hatua",

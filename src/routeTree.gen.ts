@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DiscoverRouteImport } from './routes/discover'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as PlacesPlaceIdRouteImport } from './routes/places.$placeId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,35 +29,44 @@ const OnboardingRoute = OnboardingRouteImport.update({
   path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PlacesPlaceIdRoute = PlacesPlaceIdRouteImport.update({
+  id: '/places/$placeId',
+  path: '/places/$placeId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/discover': typeof DiscoverRoute
   '/onboarding': typeof OnboardingRoute
+  '/places/$placeId': typeof PlacesPlaceIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/discover': typeof DiscoverRoute
   '/onboarding': typeof OnboardingRoute
+  '/places/$placeId': typeof PlacesPlaceIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/discover': typeof DiscoverRoute
   '/onboarding': typeof OnboardingRoute
+  '/places/$placeId': typeof PlacesPlaceIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/discover' | '/onboarding'
+  fullPaths: '/' | '/discover' | '/onboarding' | '/places/$placeId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/discover' | '/onboarding'
-  id: '__root__' | '/' | '/discover' | '/onboarding'
+  to: '/' | '/discover' | '/onboarding' | '/places/$placeId'
+  id: '__root__' | '/' | '/discover' | '/onboarding' | '/places/$placeId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DiscoverRoute: typeof DiscoverRoute
   OnboardingRoute: typeof OnboardingRoute
+  PlacesPlaceIdRoute: typeof PlacesPlaceIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -82,6 +92,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/places/$placeId': {
+      id: '/places/$placeId'
+      path: '/places/$placeId'
+      fullPath: '/places/$placeId'
+      preLoaderRoute: typeof PlacesPlaceIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -89,6 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DiscoverRoute: DiscoverRoute,
   OnboardingRoute: OnboardingRoute,
+  PlacesPlaceIdRoute: PlacesPlaceIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

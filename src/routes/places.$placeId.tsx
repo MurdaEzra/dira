@@ -125,7 +125,7 @@ function PlaceDetail() {
               >
                 <div>
                   <h3 className="text-xl font-bold">{t.feature[f.key]}</h3>
-                  {important && <p className="eyebrow mt-1 text-signal-ink">● {t.profile.needs}</p>}
+                  {important && <p className="eyebrow mt-1 text-signal-ink">● {t.place.matters}</p>}
                 </div>
                 <StatusMark status={f.status} />
                 <div>
