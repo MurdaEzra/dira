@@ -218,5 +218,10 @@ export default function DiraMap(props: DiraMapProps) {
     meMarker.current.setLngLat([props.me.lng, props.me.lat]).addTo(map);
   }, [props.me?.lat, props.me?.lng]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  return <div ref={el} role="region" aria-label={props.ariaLabel} className="absolute inset-0" />;
+  // maplibre forces position:relative on its container, so size it from an absolute wrapper.
+  return (
+    <div className="absolute inset-0">
+      <div ref={el} role="region" aria-label={props.ariaLabel} className="h-full w-full" />
+    </div>
+  );
 }
