@@ -28,3 +28,12 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules (DIRA)
+- Seed/demo data lives in `src/data/seed.ts` until Lovable Cloud tables exist; all venue names are fictional so no real venue is called inaccessible.
+- Trust math lives only in `src/lib/confidence.ts` and fit math only in `src/lib/fit.ts` (both covered by tests); UI must call them, never re-derive scores.
+- Every status is shown as icon + label + colour via `src/components/dira/marks.tsx`; map pins encode meaning by shape (`pinSvg`) so colour is never the only signal.
+- All UI strings go through `src/lib/i18n.ts` (English + Swahili share one typed shape), so a missing translation fails the typecheck.
+- Access profile and display prefs are stored client-side in `src/lib/prefs.tsx` and applied to `<html>` before paint by `PREFS_BOOT_SCRIPT` to avoid a theme flash.
+- The map (`src/components/map/DiraMap.tsx`) is lazy-loaded behind `ClientOnly`; never import it statically from a route, because maplibre is browser-only.
+- MapLibre markers: toggle our classes with `classList`, never overwrite `className` — maplibre's own marker classes position the pin.
