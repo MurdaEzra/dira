@@ -14,16 +14,314 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      access_points: {
+        Row: {
+          area: string
+          confirmations: number
+          id: string
+          kind: string
+          last_confirmed_at: string
+          lat: number
+          lng: number
+          source: string
+        }
+        Insert: {
+          area?: string
+          confirmations?: number
+          id: string
+          kind: string
+          last_confirmed_at?: string
+          lat: number
+          lng: number
+          source?: string
+        }
+        Update: {
+          area?: string
+          confirmations?: number
+          id?: string
+          kind?: string
+          last_confirmed_at?: string
+          lat?: number
+          lng?: number
+          source?: string
+        }
+        Relationships: []
+      }
+      barriers: {
+        Row: {
+          area: string
+          confirmations: number
+          conflicts: number
+          created_at: string
+          id: string
+          is_demo: boolean
+          is_temporary: boolean
+          last_confirmed_at: string
+          lat: number
+          lng: number
+          note: string | null
+          reporter_id: string | null
+          resolved_at: string | null
+          severity: string
+          source: string
+          status: string
+          type: string
+        }
+        Insert: {
+          area?: string
+          confirmations?: number
+          conflicts?: number
+          created_at?: string
+          id?: string
+          is_demo?: boolean
+          is_temporary?: boolean
+          last_confirmed_at?: string
+          lat: number
+          lng: number
+          note?: string | null
+          reporter_id?: string | null
+          resolved_at?: string | null
+          severity: string
+          source?: string
+          status?: string
+          type: string
+        }
+        Update: {
+          area?: string
+          confirmations?: number
+          conflicts?: number
+          created_at?: string
+          id?: string
+          is_demo?: boolean
+          is_temporary?: boolean
+          last_confirmed_at?: string
+          lat?: number
+          lng?: number
+          note?: string | null
+          reporter_id?: string | null
+          resolved_at?: string | null
+          severity?: string
+          source?: string
+          status?: string
+          type?: string
+        }
+        Relationships: []
+      }
+      place_features: {
+        Row: {
+          confirmations: number
+          conflicts: number
+          feature: string
+          last_confirmed_at: string
+          place_id: string
+          source: string
+          status: string
+        }
+        Insert: {
+          confirmations?: number
+          conflicts?: number
+          feature: string
+          last_confirmed_at?: string
+          place_id: string
+          source?: string
+          status?: string
+        }
+        Update: {
+          confirmations?: number
+          conflicts?: number
+          feature?: string
+          last_confirmed_at?: string
+          place_id?: string
+          source?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "place_features_place_id_fkey"
+            columns: ["place_id"]
+            isOneToOne: false
+            referencedRelation: "places"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      places: {
+        Row: {
+          area: string
+          category: string
+          created_at: string
+          id: string
+          is_demo: boolean
+          lat: number
+          lng: number
+          name: string
+        }
+        Insert: {
+          area?: string
+          category: string
+          created_at?: string
+          id: string
+          is_demo?: boolean
+          lat: number
+          lng: number
+          name: string
+        }
+        Update: {
+          area?: string
+          category?: string
+          created_at?: string
+          id?: string
+          is_demo?: boolean
+          lat?: number
+          lng?: number
+          name?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          access_profile: Json | null
+          created_at: string
+          display_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          access_profile?: Json | null
+          created_at?: string
+          display_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          access_profile?: Json | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      report_media: {
+        Row: {
+          ai_analysis: Json | null
+          barrier_id: string | null
+          blurred: boolean
+          confirmations: number
+          conflicts: number
+          created_at: string
+          id: string
+          last_confirmed_at: string
+          path: string
+          place_id: string | null
+          user_id: string
+        }
+        Insert: {
+          ai_analysis?: Json | null
+          barrier_id?: string | null
+          blurred?: boolean
+          confirmations?: number
+          conflicts?: number
+          created_at?: string
+          id?: string
+          last_confirmed_at?: string
+          path: string
+          place_id?: string | null
+          user_id: string
+        }
+        Update: {
+          ai_analysis?: Json | null
+          barrier_id?: string | null
+          blurred?: boolean
+          confirmations?: number
+          conflicts?: number
+          created_at?: string
+          id?: string
+          last_confirmed_at?: string
+          path?: string
+          place_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "report_media_barrier_id_fkey"
+            columns: ["barrier_id"]
+            isOneToOne: false
+            referencedRelation: "barriers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "report_media_place_id_fkey"
+            columns: ["place_id"]
+            isOneToOne: false
+            referencedRelation: "places"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      verifications: {
+        Row: {
+          created_at: string
+          id: string
+          proposed_status: string | null
+          target_id: string
+          target_type: string
+          user_id: string
+          vote: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          proposed_status?: string | null
+          target_id: string
+          target_type: string
+          user_id?: string
+          vote: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          proposed_status?: string | null
+          target_id?: string
+          target_type?: string
+          user_id?: string
+          vote?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +448,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const
