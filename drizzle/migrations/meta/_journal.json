@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1794933732227,
+      "tag": "0000_dira_core_schema_and_demo_seed",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794965925526,
+      "tag": "0001_photo_rules_and_barrier_reporting",
+      "breakpoints": true
+    }
+  ]
+}

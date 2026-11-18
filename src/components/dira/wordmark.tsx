@@ -1,24 +1,40 @@
 import { cn } from "@/lib/utils";
 
-/** DIRA means "compass" in Swahili — the mark is a compass needle. */
-export function CompassMark({ className }: { className?: string }) {
+/*
+ * DIRA logo — the brand's own lettering, traced to vector so it takes `currentColor`
+ * and stays crisp in light, dark and high-contrast themes.
+ */
+const LETTERS = "M6631 1811 c-14 -25 -14 -87 -1 -112 10 -19 33 -19 1068 -19 1164 0 1136 1 1261 -62 173 -87 259 -274 193 -420 -41 -93 -142 -172 -272 -213 -66 -21 -818 -38 -1212 -28 -153 4 -228 3 -228 -4 0 -6 80 -64 177 -129 237 -159 450 -311 731 -523 129 -97 261 -195 294 -218 l59 -43 170 0 c93 0 169 2 169 5 0 3 -100 72 -222 154 -513 342 -843 573 -843 589 0 16 38 18 430 23 400 5 436 7 510 27 188 51 326 155 396 297 44 91 49 231 10 328 -66 168 -224 288 -450 344 -59 15 -188 17 -1148 20 -1068 4 -1082 3 -1092 -16z M61 1811 c-23 -15 -20 -110 4 -127 16 -12 174 -14 941 -14 1012 0 1010 0 1178 -61 144 -52 275 -140 369 -248 53 -60 138 -226 156 -303 68 -289 -174 -638 -533 -770 -175 -64 -121 -61 -1166 -67 l-955 -6 0 -65 0 -65 905 -3 c558 -2 949 1 1020 7 725 65 1147 733 799 1266 -175 269 -484 432 -862 455 -198 12 -1837 13 -1856 1z M4620 1801 c-7 -13 -10 -301 -10 -865 l0 -845 22 -12 c32 -17 139 -5 155 17 17 23 19 1674 3 1705 -9 16 -22 19 -85 19 -63 0 -76 -3 -85 -19z M12240 1804 c-30 -8 -89 -31 -130 -51 -111 -54 -125 -69 -680 -728 -215 -255 -299 -354 -351 -415 -228 -265 -459 -542 -459 -550 0 -13 180 -13 213 -1 13 5 65 60 115 123 50 62 150 183 222 268 135 159 837 1000 902 1080 97 120 278 168 433 115 102 -35 124 -57 380 -370 72 -87 187 -227 256 -309 70 -83 168 -200 219 -261 51 -60 190 -228 310 -371 120 -144 226 -264 235 -268 9 -3 59 -6 111 -6 108 0 112 4 58 65 -19 22 -135 159 -257 304 -229 273 -477 565 -844 997 -250 293 -301 335 -468 380 -64 18 -195 17 -265 -2z M12284 661 c-99 -45 -130 -165 -62 -239 104 -111 307 -67 334 73 24 128 -137 227 -272 166z";
+const A_MARK = "M12240 1804 c-30 -8 -89 -31 -130 -51 -111 -54 -125 -69 -680 -728 -215 -255 -299 -354 -351 -415 -228 -265 -459 -542 -459 -550 0 -13 180 -13 213 -1 13 5 65 60 115 123 50 62 150 183 222 268 135 159 837 1000 902 1080 97 120 278 168 433 115 102 -35 124 -57 380 -370 72 -87 187 -227 256 -309 70 -83 168 -200 219 -261 51 -60 190 -228 310 -371 120 -144 226 -264 235 -268 9 -3 59 -6 111 -6 108 0 112 4 58 65 -19 22 -135 159 -257 304 -229 273 -477 565 -844 997 -250 293 -301 335 -468 380 -64 18 -195 17 -265 -2z M12284 661 c-99 -45 -130 -165 -62 -239 104 -111 307 -67 334 73 24 128 -137 227 -272 166z";
+
+function Glyphs({ d }: { d: string }) {
   return (
-    <svg viewBox="0 0 40 40" aria-hidden className={cn("size-9", className)}>
-      <circle cx="20" cy="20" r="17.5" fill="none" stroke="currentColor" strokeWidth="2.5" />
-      <g className="needle">
-        <path d="M20 5.5l5 14.5h-10z" className="fill-coral" />
-        <path d="M20 34.5l-5-14.5h10z" fill="currentColor" />
-      </g>
-      <circle cx="20" cy="20" r="2.4" className="fill-background" />
+    <g transform="translate(0 187) scale(0.1 -0.1)" fill="currentColor">
+      <path d={d} />
+    </g>
+  );
+}
+
+/** The "A" with its dot — a compact brand mark for tight spots. */
+export function LogoMark({ className }: { className?: string }) {
+  return (
+    <svg viewBox="1056 0 361 187" aria-hidden className={cn("h-6 w-auto", className)}>
+      <Glyphs d={A_MARK} />
     </svg>
   );
 }
 
-export function Wordmark({ className }: { className?: string }) {
+/** Full DIRA logo. Pass `title` when it stands alone (not inside a labelled link). */
+export function Wordmark({ className, title }: { className?: string; title?: string }) {
   return (
-    <span className={cn("inline-flex items-center gap-2 text-foreground", className)}>
-      <CompassMark />
-      <span className="font-display text-2xl font-extrabold tracking-[-0.04em]">DIRA</span>
-    </span>
+    <svg
+      viewBox="0 0 1415 187"
+      role={title ? "img" : undefined}
+      aria-hidden={title ? undefined : true}
+      aria-label={title}
+      className={cn("h-5 w-auto text-foreground sm:h-6", className)}
+    >
+      <Glyphs d={LETTERS} />
+    </svg>
   );
 }

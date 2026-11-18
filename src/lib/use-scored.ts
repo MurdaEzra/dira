@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { PLACES } from "@/data/seed";
 import { usePrefs } from "./prefs";
+import { useCityData } from "./data";
 import { distanceKm, fitBand, fitScore } from "./fit";
 import { lastVerified, placeTier } from "./place";
 import type { Place } from "./types";
@@ -38,5 +38,6 @@ export function scorePlaces(
 
 export function useScoredPlaces() {
   const { profile, here } = usePrefs();
-  return useMemo(() => scorePlaces(PLACES, profile, here), [profile, here]);
+  const { places } = useCityData();
+  return useMemo(() => scorePlaces(places, profile, here), [places, profile, here]);
 }
