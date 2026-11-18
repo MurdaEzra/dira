@@ -92,6 +92,8 @@ export interface Barrier {
   area: string;
   status: BarrierStatus;
   evidence: Evidence;
+  note?: string | null;
+  reporterId?: string | null;
 }
 
 export interface AccessPoint {

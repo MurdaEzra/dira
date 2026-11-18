@@ -50,6 +50,7 @@ export type Database = {
       barriers: {
         Row: {
           area: string
+          client_ref: string | null
           confirmations: number
           conflicts: number
           created_at: string
@@ -69,6 +70,7 @@ export type Database = {
         }
         Insert: {
           area?: string
+          client_ref?: string | null
           confirmations?: number
           conflicts?: number
           created_at?: string
@@ -88,6 +90,7 @@ export type Database = {
         }
         Update: {
           area?: string
+          client_ref?: string | null
           confirmations?: number
           conflicts?: number
           created_at?: string
@@ -318,6 +321,20 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      report_barrier: {
+        Args: {
+          p_ai_triaged?: boolean
+          p_area: string
+          p_client_ref: string
+          p_lat: number
+          p_lng: number
+          p_note: string
+          p_severity: string
+          p_temporary: boolean
+          p_type: string
+        }
+        Returns: Json
       }
     }
     Enums: {
