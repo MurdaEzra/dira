@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { usePrefs } from "@/lib/prefs";
 import { Button } from "@/components/ui/button";
 import { LimitsFields, MobilityPicker, NeedsFields } from "@/components/dira/profile-fields";
-import { CompassMark } from "@/components/dira/wordmark";
+import { LogoMark } from "@/components/dira/wordmark";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/onboarding")({
@@ -71,7 +71,7 @@ function Onboarding() {
           <span className="numeral text-[6.5rem] text-coral sm:text-[8rem]" aria-hidden>
             0{step + 1}
           </span>
-          {step === 0 && <CompassMark className="mb-4 size-14 text-foreground" />}
+          {step === 0 && <LogoMark className="mb-5 h-12 text-foreground sm:h-14" />}
         </div>
         <h1 ref={heading} tabIndex={-1} className="mt-2 text-4xl font-extrabold outline-none sm:text-5xl">
           {cur.title}

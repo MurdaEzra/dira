@@ -342,17 +342,6 @@
   font-size: 0.7rem;
 }
 
-/* Compass needle draw-in */
-@keyframes needle {
-  0% { transform: rotate(-38deg); }
-  60% { transform: rotate(8deg); }
-  100% { transform: rotate(0deg); }
-}
-.needle {
-  transform-origin: 50% 50%;
-  animation: needle 900ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-}
-
 @keyframes rise {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
