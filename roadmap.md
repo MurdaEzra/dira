@@ -4,7 +4,7 @@
 - [x] Design system, EN + Swahili, onboarding/profile, home map, Discover, place detail, confidence + fit tests
 
 ## Phase 2 — routing
-- [ ] Lovable Cloud tables + seed (places, features, barriers, ramps); app reads them, seed file as offline fallback
+- [x] Lovable Cloud tables + seed (places, features, barriers, ramps); app reads them, seed file as offline fallback
 - [ ] Accounts: email + Google sign-in, profile (name + access needs synced), reset password, delete account
 - [ ] OpenRouteService wheelchair routing (server) with avoid_polygons + 3 seeded demo journeys as fallback
 - [ ] 3 route options (Most accessible / Balanced / Fastest), score, adjusted time, effort, flagged segments with trust
@@ -18,7 +18,7 @@
 - [ ] Verification: "Still there?" / "It's gone" on barriers, "Still accurate" / "Something changed" on places
 - [ ] Place photo gallery with AI tags marked unverified
 
-## Phase 4 — voice
+## Phase 4 — voice (user asked: complete all phases)
 - [ ] Mic on every screen, intents, spoken + vibration cues
 
 ## Phase 5 — community + ops
