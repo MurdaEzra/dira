@@ -9,10 +9,13 @@ import type {
   Source,
 } from "./types";
 import type { Tier } from "./confidence";
+import { MORE_EN, MORE_SW, type More } from "./i18n-more";
 
-type Dict = {
+type Dict = Base & More;
+
+type Base = {
   app: { tagline: string; demo: string; demoLong: string; skip: string };
-  nav: { map: string; discover: string; profile: string; primary: string };
+  nav: { map: string; discover: string; profile: string; primary: string; route: string; report: string; signIn: string; account: string };
   lang: { label: string; en: string; sw: string };
   cat: Record<Category, string>;
   catOne: Record<Category, string>;
@@ -139,14 +142,14 @@ type Dict = {
   };
 };
 
-const en: Dict = {
+const enBase: Base = {
   app: {
     tagline: "Know before you go.",
     demo: "Demo data",
     demoLong: "Demo data — fictional venues in Nairobi. Not a statement about any real place.",
     skip: "Skip to main content",
   },
-  nav: { map: "Map", discover: "Discover", profile: "My access", primary: "Main" },
+  nav: { map: "Map", discover: "Discover", profile: "My access", primary: "Main", route: "Route", report: "Report", signIn: "Sign in", account: "Your account" },
   lang: { label: "Language", en: "English", sw: "Kiswahili" },
   cat: {
     restaurant: "Restaurants",
@@ -358,14 +361,14 @@ const en: Dict = {
   },
 };
 
-const sw: Dict = {
+const swBase: Base = {
   app: {
     tagline: "Jua kabla hujaenda.",
     demo: "Data ya majaribio",
     demoLong: "Data ya majaribio — maeneo ya kubuni jijini Nairobi. Si kauli kuhusu mahali halisi.",
     skip: "Ruka hadi maudhui makuu",
   },
-  nav: { map: "Ramani", discover: "Gundua", profile: "Ufikiaji wangu", primary: "Kuu" },
+  nav: { map: "Ramani", discover: "Gundua", profile: "Ufikiaji wangu", primary: "Kuu", route: "Njia", report: "Ripoti", signIn: "Ingia", account: "Akaunti yako" },
   lang: { label: "Lugha", en: "English", sw: "Kiswahili" },
   cat: {
     restaurant: "Mikahawa",
@@ -576,6 +579,9 @@ const sw: Dict = {
     privacy: "Wasifu wako umehifadhiwa kwenye kifaa hiki pekee.",
   },
 };
+
+const en: Dict = { ...enBase, ...MORE_EN };
+const sw: Dict = { ...swBase, ...MORE_SW };
 
 export const DICTS: Record<"en" | "sw", Dict> = { en, sw };
 export type { Dict };
