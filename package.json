@@ -1,25 +1,28 @@
 {
-  "name": "tanstack_start_ts",
+  "name": "dira",
   "private": true,
   "sideEffects": false,
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build",
+    "build": "vite build && npm run typecheck",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
+    "start": "node --env-file-if-exists=.env .output/server/index.mjs",
     "lint": "eslint .",
+    "typecheck": "node node_modules/typescript/bin/tsc --noEmit",
     "format": "prettier --write .",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "db:generate": "node --env-file-if-exists=.env node_modules/drizzle-kit/bin.cjs generate",
+    "db:migrate": "node --env-file-if-exists=.env node_modules/drizzle-kit/bin.cjs migrate",
+    "db:studio": "node --env-file-if-exists=.env node_modules/drizzle-kit/bin.cjs studio"
   },
   "overrides": {
     "rolldown": "1.2.1"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
-    "@lovable.dev/ai-gateway": "^0.1.13",
-    "@lovable.dev/cloud-auth-js": "^1.1.2",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
     "@radix-ui/react-aspect-ratio": "^1.1.8",
@@ -77,7 +80,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
-    "@lovable.dev/vite-tanstack-config": "2.27.2",
     "@testing-library/jest-dom": "^6.6.0",
     "@testing-library/react": "^16.0.0",
     "@types/node": "^22.16.5",

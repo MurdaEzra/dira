@@ -1,4 +1,4 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+﻿import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
   Link,
@@ -12,10 +12,11 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { PrefsProvider, PREFS_BOOT_SCRIPT } from "../lib/prefs";
+import { AuthProvider } from "../lib/auth";
+import { ReportQueueSync } from "../components/dira/report-queue-sync";
 import { AppShell } from "../components/dira/shell";
 import { Wordmark } from "../components/dira/wordmark";
 import { Toaster } from "../components/ui/sonner";
-import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
   return (
@@ -44,7 +45,7 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
+    console.error("DIRA application error", error);
   }, [error]);
 
   return (
@@ -86,14 +87,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "DIRA — Know before you go" },
+      { title: "DIRA â€” Know before you go" },
       {
         name: "description",
         content:
           "DIRA: accessible city navigation with crowd-verified access details you can trust.",
       },
       { name: "theme-color", content: "#114B5F" },
-      { property: "og:title", content: "DIRA — Know before you go" },
+      { property: "og:title", content: "DIRA â€” Know before you go" },
       {
         property: "og:description",
         content: "Accessible city navigation with crowd-verified access details you can trust.",
@@ -143,10 +144,13 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <PrefsProvider>
-        <AppShell>
-          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-          <Outlet />
-        </AppShell>
+        <AuthProvider>
+          <AppShell>
+            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+            <Outlet />
+          </AppShell>
+          <ReportQueueSync />
+        </AuthProvider>
         <Toaster position="top-center" />
       </PrefsProvider>
     </QueryClientProvider>

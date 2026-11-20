@@ -1,8 +1,12 @@
-import { ClientOnly, Link, createFileRoute, useNavigate } from "@tanstack/react-router";
+﻿import { ClientOnly, Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { ChevronUp, Layers, LocateFixed, Search, X, ArrowRight } from "lucide-react";
-import { ACCESS_POINTS, BARRIERS, CITY } from "@/data/seed";
+import { CITY } from "@/data/city";
+import { useCityData, useCityDataStatus } from "@/lib/data";
 import { usePrefs } from "@/lib/prefs";
+import { useAuth } from "@/lib/auth";
+import { supabase } from "@/integrations/supabase/client";
 import { useScoredPlaces } from "@/lib/use-scored";
 import { fmt } from "@/lib/i18n";
 import { isExpired, tier } from "@/lib/confidence";
@@ -23,13 +27,13 @@ export const Route = createFileRoute("/")({
     typeof s["place"] === "string" ? { place: s["place"] } : {},
   head: () => ({
     meta: [
-      { title: "DIRA — Accessible map of Nairobi" },
+      { title: "DIRA â€” Accessible map of Nairobi" },
       {
         name: "description",
         content:
           "See step-free places, verified ramps and reported barriers on one map, ranked for your access needs.",
       },
-      { property: "og:title", content: "DIRA — Accessible map of Nairobi" },
+      { property: "og:title", content: "DIRA â€” Accessible map of Nairobi" },
       {
         property: "og:description",
         content:
@@ -49,7 +53,13 @@ function Home() {
   const { t, display, hydrated, onboarded, here, setHere, announce, profile } = usePrefs();
   const search = Route.useSearch();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+  const [verifyMessage, setVerifyMessage] = useState("");
+  const [verifyBusy, setVerifyBusy] = useState(false);
   const scored = useScoredPlaces();
+  const city = useCityData();
+  const cityStatus = useCityDataStatus();
   const [cat, setCat] = useState<Category | "all">("all");
   const [q, setQ] = useState("");
   const [layers, setLayers] = useState<Record<Layer, boolean>>({
@@ -110,7 +120,7 @@ function Home() {
           label: `${s.place.name}, ${t.catOne[s.place.category]}, ${t.map.fit} ${s.score}, ${t.tier[s.tier]}`,
         });
     if (layers.barriers)
-      for (const b of BARRIERS)
+      for (const b of city.barriers)
         out.push({
           id: b.id,
           group: "barrier",
@@ -121,7 +131,7 @@ function Home() {
           label: `${t.map.barrierHere}: ${t.barrier[b.type]}, ${t.severity[b.severity]}, ${t.bstatus[b.status]}, ${t.tier[tier(b.evidence)]}`,
         });
     if (layers.ramps)
-      for (const r of ACCESS_POINTS)
+      for (const r of city.accessPoints)
         out.push({
           id: r.id,
           group: "ramp",
@@ -131,16 +141,18 @@ function Home() {
           label: `${r.kind === "ramp" ? t.map.rampKind : t.map.entranceKind}, ${r.area}, ${t.tier[tier(r.evidence)]}`,
         });
     return out;
-  }, [visible, layers, t]);
+  }, [visible, layers, t, city.barriers, city.accessPoints]);
 
   const heat = useMemo(
     () =>
-      BARRIERS.filter((b) => b.status !== "resolved" && !isExpired(b.evidence)).map((b) => ({
-        lat: b.lat,
-        lng: b.lng,
-        weight: SEV_WEIGHT[b.severity],
-      })),
-    [],
+      city.barriers
+        .filter((b) => b.status !== "resolved" && !isExpired(b.evidence))
+        .map((b) => ({
+          lat: b.lat,
+          lng: b.lng,
+          weight: SEV_WEIGHT[b.severity],
+        })),
+    [city.barriers],
   );
 
   function select(key: string, lat: number, lng: number) {
@@ -167,12 +179,42 @@ function Home() {
 
   const [group, id] = selected?.split(":") ?? [];
   const selPlace = group === "place" ? scored.find((s) => s.place.id === id) : undefined;
-  const selBarrier = group === "barrier" ? BARRIERS.find((b) => b.id === id) : undefined;
-  const selRamp = group === "ramp" ? ACCESS_POINTS.find((r) => r.id === id) : undefined;
+  const selBarrier = group === "barrier" ? city.barriers.find((b) => b.id === id) : undefined;
+  const selRamp = group === "ramp" ? city.accessPoints.find((r) => r.id === id) : undefined;
+  async function verifyBarrier(vote: "confirm" | "dispute") {
+    if (!user) {
+      await navigate({ to: "/sign-in" });
+      return;
+    }
+    if (!selBarrier) return;
+    setVerifyBusy(true);
+    setVerifyMessage("");
+    const { error } = await supabase.from("verifications").insert({
+      target_type: "barrier",
+      target_id: selBarrier.id,
+      vote,
+    });
+    if (error) {
+      const message = error.message;
+      setVerifyMessage(
+        message.includes("own_report")
+          ? t.verify.own
+          : message.includes("already_verified")
+            ? t.verify.already
+            : message.includes("rate_limited")
+              ? t.verify.rate
+              : t.verify.failed,
+      );
+    } else {
+      setVerifyMessage(t.verify.thanks);
+      await queryClient.invalidateQueries({ queryKey: ["city"] });
+    }
+    setVerifyBusy(false);
+  }
 
   return (
     <div className="relative h-stage overflow-hidden lg:grid lg:grid-cols-[27rem_1fr] lg:grid-rows-[minmax(0,1fr)]">
-      {/* Panel — bottom sheet on phones, side column on desktop */}
+      {/* Panel â€” bottom sheet on phones, side column on desktop */}
       <section
         aria-label={t.map.nearby}
         data-open={open}
@@ -194,7 +236,7 @@ function Home() {
               aria-hidden
               className={cn("size-4 transition-transform", open && "rotate-180")}
             />
-            {open ? t.map.hideList : `${t.map.showList} · ${visible.length}`}
+            {open ? t.map.hideList : `${t.map.showList} Â· ${visible.length}`}
           </span>
         </button>
 
@@ -274,7 +316,7 @@ function Home() {
                   <FitNumeral score={selPlace.score} band={selPlace.band} />
                   <div className="min-w-0 pr-8">
                     <p className="text-sm text-muted-foreground">
-                      {t.catOne[selPlace.place.category]} · {selPlace.place.area}
+                      {t.catOne[selPlace.place.category]} Â· {selPlace.place.area}
                     </p>
                     <h2 className="text-2xl font-bold">{selPlace.place.name}</h2>
                     <div className="mt-1.5 flex flex-wrap items-baseline gap-x-3">
@@ -312,13 +354,43 @@ function Home() {
                       >
                         {t.severity[selBarrier.severity]}
                       </span>{" "}
-                      · {t.bstatus[selBarrier.status]} · {selBarrier.area}
+                      Â· {t.bstatus[selBarrier.status]} Â· {selBarrier.area}
                     </p>
                     <div className="mt-1.5 flex flex-wrap items-baseline gap-x-3">
                       <TierMark tier={tier(selBarrier.evidence)} compact />
                       <EvidenceLine e={selBarrier.evidence} />
                     </div>
                   </div>
+                  {selBarrier.status !== "resolved" && !isExpired(selBarrier.evidence) && (
+                    <div className="mt-4 w-full">
+                      <p className="font-bold">{t.verify.barrierPrompt}</p>
+                      {user?.id === selBarrier.reporterId ? (
+                        <p className="mt-2">{t.verify.own}</p>
+                      ) : (
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          <Button
+                            variant="outline"
+                            disabled={verifyBusy}
+                            onClick={() => void verifyBarrier("confirm")}
+                          >
+                            {t.verify.stillThere}
+                          </Button>
+                          <Button
+                            variant="outline"
+                            disabled={verifyBusy}
+                            onClick={() => void verifyBarrier("dispute")}
+                          >
+                            {t.verify.gone}
+                          </Button>
+                        </div>
+                      )}
+                      {verifyMessage && (
+                        <p role="status" className="mt-2">
+                          {verifyMessage}
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
               {selRamp && (
@@ -345,7 +417,21 @@ function Home() {
               {fmt(t.discover.results, { n: visible.length })}
             </span>
           </div>
-          {visible.length === 0 ? (
+          {city.source === "empty" ? (
+            <div className="space-y-3 py-8" role="status">
+              <p>{cityStatus.loading ? t.app.dataLoading : t.app.dataUnavailable}</p>
+              {!cityStatus.loading && (
+                <Button
+                  variant="outline"
+                  onClick={() => void queryClient.invalidateQueries({ queryKey: ["city"] })}
+                >
+                  {t.app.retry}
+                </Button>
+              )}
+            </div>
+          ) : city.places.length === 0 ? (
+            <p className="py-8 text-xl">{t.app.noData}</p>
+          ) : visible.length === 0 ? (
             <p className="py-8 text-lg">{t.map.noResults}</p>
           ) : (
             <ul className="divide-y-[length:var(--rule-w)] divide-border">
@@ -360,7 +446,6 @@ function Home() {
               ))}
             </ul>
           )}
-          <p className="mt-4 text-sm text-muted-foreground">{t.app.demoLong}</p>
         </div>
       </section>
 

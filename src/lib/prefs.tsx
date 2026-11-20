@@ -16,7 +16,7 @@ import {
   type DisplayPrefs,
   type Lang,
 } from "./types";
-import { CITY } from "@/data/seed";
+import { CITY } from "@/data/city";
 
 const KEY = "dira:prefs:v1";
 

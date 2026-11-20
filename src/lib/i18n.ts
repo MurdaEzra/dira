@@ -14,8 +14,25 @@ import { MORE_EN, MORE_SW, type More } from "./i18n-more";
 type Dict = Base & More;
 
 type Base = {
-  app: { tagline: string; demo: string; demoLong: string; skip: string };
-  nav: { map: string; discover: string; profile: string; primary: string; route: string; report: string; signIn: string; account: string };
+  app: {
+    tagline: string;
+    skip: string;
+    dataLoading: string;
+    dataUnavailable: string;
+    noData: string;
+    retry: string;
+  };
+  nav: {
+    map: string;
+    discover: string;
+    profile: string;
+    primary: string;
+    route: string;
+    report: string;
+    signIn: string;
+    account: string;
+    admin: string;
+  };
   lang: { label: string; en: string; sw: string };
   cat: Record<Category, string>;
   catOne: Record<Category, string>;
@@ -153,11 +170,23 @@ type Base = {
 const enBase: Base = {
   app: {
     tagline: "Know before you go.",
-    demo: "Demo data",
-    demoLong: "Demo data — fictional venues in Nairobi. Not a statement about any real place.",
     skip: "Skip to main content",
+    dataLoading: "Connecting to live Nairobi access data…",
+    dataUnavailable: "Live access data is unavailable. Check your connection and retry.",
+    noData: "No community access data has been added here yet.",
+    retry: "Retry",
   },
-  nav: { map: "Map", discover: "Discover", profile: "My access", primary: "Main", route: "Route", report: "Report", signIn: "Sign in", account: "Your account" },
+  nav: {
+    map: "Map",
+    discover: "Discover",
+    profile: "My access",
+    primary: "Main",
+    route: "Route",
+    report: "Report",
+    signIn: "Sign in",
+    account: "Your account",
+    admin: "Admin",
+  },
   lang: { label: "Language", en: "English", sw: "Kiswahili" },
   cat: {
     restaurant: "Restaurants",
@@ -373,11 +402,23 @@ const enBase: Base = {
 const swBase: Base = {
   app: {
     tagline: "Jua kabla hujaenda.",
-    demo: "Data ya majaribio",
-    demoLong: "Data ya majaribio — maeneo ya kubuni jijini Nairobi. Si kauli kuhusu mahali halisi.",
     skip: "Ruka hadi maudhui makuu",
+    dataLoading: "Inaunganisha na data halisi ya ufikiaji ya Nairobi…",
+    dataUnavailable: "Data halisi ya ufikiaji haipatikani. Angalia mtandao ujaribu tena.",
+    noData: "Bado hakuna data ya ufikiaji wa jamii iliyowekwa hapa.",
+    retry: "Jaribu tena",
   },
-  nav: { map: "Ramani", discover: "Gundua", profile: "Ufikiaji wangu", primary: "Kuu", route: "Njia", report: "Ripoti", signIn: "Ingia", account: "Akaunti yako" },
+  nav: {
+    map: "Ramani",
+    discover: "Gundua",
+    profile: "Ufikiaji wangu",
+    primary: "Kuu",
+    route: "Njia",
+    report: "Ripoti",
+    signIn: "Ingia",
+    account: "Akaunti yako",
+    admin: "Msimamizi",
+  },
   lang: { label: "Lugha", en: "English", sw: "Kiswahili" },
   cat: {
     restaurant: "Mikahawa",

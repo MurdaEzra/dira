@@ -2,6 +2,8 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { usePrefs } from "@/lib/prefs";
 import { useScoredPlaces } from "@/lib/use-scored";
+import { useCityData, useCityDataStatus } from "@/lib/data";
+import { useQueryClient } from "@tanstack/react-query";
 import { fmt } from "@/lib/i18n";
 import { meetsTier, TIER_ORDER, type Tier } from "@/lib/confidence";
 import { CATEGORIES, type Category, type FeatureKey } from "@/lib/types";
@@ -45,6 +47,9 @@ function Discover() {
   const { t } = usePrefs();
   const navigate = useNavigate();
   const scored = useScoredPlaces();
+  const city = useCityData();
+  const cityStatus = useCityDataStatus();
+  const queryClient = useQueryClient();
   const [cat, setCat] = useState<Category | "all">("all");
   const [must, setMust] = useState<FeatureKey[]>([]);
   const [minTier, setMinTier] = useState<Tier | "any">("any");
@@ -164,7 +169,21 @@ function Discover() {
             {fmt(t.discover.results, { n: results.length })}
           </h2>
           <p className="eyebrow rule-b pb-3 text-muted-foreground">{t.discover.sortNote}</p>
-          {results.length === 0 ? (
+          {city.source === "empty" ? (
+            <div className="space-y-3 py-12" role="status">
+              <p>{cityStatus.loading ? t.app.dataLoading : t.app.dataUnavailable}</p>
+              {!cityStatus.loading && (
+                <Button
+                  variant="outline"
+                  onClick={() => void queryClient.invalidateQueries({ queryKey: ["city"] })}
+                >
+                  {t.app.retry}
+                </Button>
+              )}
+            </div>
+          ) : city.places.length === 0 ? (
+            <p className="py-12 text-xl">{t.app.noData}</p>
+          ) : results.length === 0 ? (
             <p className="py-12 text-xl">{t.discover.none}</p>
           ) : (
             <ul className="divide-y-[length:var(--rule-w)] divide-border">
@@ -177,7 +196,6 @@ function Discover() {
               ))}
             </ul>
           )}
-          <p className="mt-6 text-sm text-muted-foreground">{t.app.demoLong}</p>
         </section>
       </div>
     </div>

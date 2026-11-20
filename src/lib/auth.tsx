@@ -1,4 +1,13 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import type { User } from "@supabase/supabase-js";
@@ -9,6 +18,8 @@ import { DEFAULT_PROFILE, type AccessProfile } from "./types";
 interface AuthCtx {
   user: User | null;
   ready: boolean;
+  isAdmin: boolean;
+  roleReady: boolean;
   displayName: string;
   saveDisplayName: (name: string) => Promise<boolean>;
   signOut: () => Promise<void>;
@@ -26,6 +37,8 @@ function mergeProfile(p: unknown): AccessProfile | null {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [roleReady, setRoleReady] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const { profile, setProfile, onboarded, setOnboarded, hydrated } = usePrefs();
   const router = useRouter();
@@ -52,10 +65,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // On sign-in: pull the saved profile, or push this device's one if the account has none yet.
   const uid = user?.id;
   useEffect(() => {
+    if (!uid) {
+      setIsAdmin(false);
+      setRoleReady(true);
+      return;
+    }
+    let cancelled = false;
+    setRoleReady(false);
+    supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", uid)
+      .eq("role", "admin")
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!cancelled) {
+          setIsAdmin(!!data);
+          setRoleReady(true);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [uid]);
+
+  useEffect(() => {
     if (!uid || !hydrated) return;
     let cancelled = false;
     (async () => {
-      const { data } = await supabase.from("profiles").select("display_name, access_profile").eq("id", uid).maybeSingle();
+      const { data } = await supabase
+        .from("profiles")
+        .select("display_name, access_profile")
+        .eq("id", uid)
+        .maybeSingle();
       if (cancelled) return;
       setDisplayName(data?.display_name ?? "");
       const remote = mergeProfile(data?.access_profile);
@@ -82,7 +124,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const json = JSON.stringify(profile);
     if (json === synced.current) return;
     const t = setTimeout(async () => {
-      const { error } = await supabase.from("profiles").update({ access_profile: JSON.parse(json) }).eq("id", uid);
+      const { error } = await supabase
+        .from("profiles")
+        .update({ access_profile: JSON.parse(json) })
+        .eq("id", uid);
       if (!error) synced.current = json;
     }, 800);
     return () => clearTimeout(t);
@@ -92,7 +137,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     async (name: string) => {
       if (!uid) return false;
       const clean = name.trim().slice(0, 60);
-      const { error } = await supabase.from("profiles").update({ display_name: clean }).eq("id", uid);
+      const { error } = await supabase
+        .from("profiles")
+        .update({ display_name: clean })
+        .eq("id", uid);
       if (!error) setDisplayName(clean);
       return !error;
     },
@@ -105,7 +153,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setDisplayName("");
   }, [qc]);
 
-  const value = useMemo(() => ({ user, ready, displayName, saveDisplayName, signOut }), [user, ready, displayName, saveDisplayName, signOut]);
+  const value = useMemo(
+    () => ({ user, ready, isAdmin, roleReady, displayName, saveDisplayName, signOut }),
+    [user, ready, isAdmin, roleReady, displayName, saveDisplayName, signOut],
+  );
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 

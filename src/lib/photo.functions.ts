@@ -4,16 +4,22 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { AI_BARRIER_TYPES, type PhotoAnalysis } from "./photo-types";
 
 const input = z.object({
-  image: z
-    .string()
-    .startsWith("data:image/jpeg;base64,")
-    .max(3_000_000),
+  image: z.string().startsWith("data:image/jpeg;base64,").max(3_000_000),
 });
 
 const SCHEMA = {
   type: "object",
   additionalProperties: false,
-  required: ["is_barrier", "barrier_type", "severity", "confidence", "summary_en", "summary_sw", "tags", "privacy_regions"],
+  required: [
+    "is_barrier",
+    "barrier_type",
+    "severity",
+    "confidence",
+    "summary_en",
+    "summary_sw",
+    "tags",
+    "privacy_regions",
+  ],
   properties: {
     is_barrier: { type: "boolean" },
     barrier_type: { type: "string", enum: [...AI_BARRIER_TYPES] },
@@ -26,7 +32,25 @@ const SCHEMA = {
       maxItems: 8,
       items: {
         type: "string",
-        enum: ["ramp", "stairs", "step", "kerb", "dropped_kerb", "lift", "door", "narrow", "slope", "rough_surface", "water", "vehicle", "construction", "handrail", "tactile_paving", "seating", "toilet_sign"],
+        enum: [
+          "ramp",
+          "stairs",
+          "step",
+          "kerb",
+          "dropped_kerb",
+          "lift",
+          "door",
+          "narrow",
+          "slope",
+          "rough_surface",
+          "water",
+          "vehicle",
+          "construction",
+          "handrail",
+          "tactile_paving",
+          "seating",
+          "toilet_sign",
+        ],
       },
     },
     privacy_regions: {
@@ -58,36 +82,55 @@ Look at the photo and judge whether it shows a physical accessibility barrier on
 - privacy_regions: a generous bounding box (normalised 0..1, x/y = top-left) around EVERY human face and EVERY vehicle number plate, even small or partial ones. Return [] if none.
 Never guess identities. Return JSON only.`;
 
-export type AnalyzeResult = { ok: true; analysis: PhotoAnalysis } | { ok: false; error: "unavailable" | "refused" };
+export type AnalyzeResult =
+  { ok: true; analysis: PhotoAnalysis } | { ok: false; error: "unavailable" | "refused" };
 
 export const analyzePhoto = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => input.parse(d))
   .handler(async ({ data }): Promise<AnalyzeResult> => {
-    const { generateResponse, GatewayError } = await import("@lovable.dev/ai-gateway");
+    const apiKey = process.env["OPENAI_API_KEY"];
+    if (!apiKey) return { ok: false, error: "unavailable" };
     try {
-      const res = await generateResponse({
-        model: "openai/gpt-6-astra",
-        input: [
-          {
-            role: "user",
-            content: [
-              { type: "input_text", text: PROMPT },
-              { type: "input_image", image_url: data.image, detail: "high" },
-            ],
+      const response = await fetch("https://api.openai.com/v1/responses", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: process.env["OPENAI_VISION_MODEL"] || "gpt-4.1-mini",
+          input: [
+            {
+              role: "user",
+              content: [
+                { type: "input_text", text: PROMPT },
+                { type: "input_image", image_url: data.image, detail: "high" },
+              ],
+            },
+          ],
+          text: {
+            format: { type: "json_schema", name: "barrier_photo", strict: true, schema: SCHEMA },
           },
-        ],
-        text: { format: { type: "json_schema", name: "barrier_photo", strict: true, schema: SCHEMA } },
-        max_output_tokens: 1200,
+          max_output_tokens: 1200,
+        }),
       });
+      if (!response.ok) {
+        console.error("OpenAI photo analysis failed", response.status);
+        return { ok: false, error: "unavailable" };
+      }
+      const res = (await response.json()) as {
+        output?: { type?: string; content?: { type?: string; text?: string }[] }[];
+      };
       let text = "";
       for (const item of res.output ?? []) {
         if (item.type !== "message") continue;
-        for (const c of item.content) {
+        for (const c of item.content ?? []) {
           if (c.type === "output_text") text += c.text;
           if (c.type === "refusal") return { ok: false, error: "refused" };
         }
       }
+      if (!text) return { ok: false, error: "unavailable" };
       const parsed = JSON.parse(text) as PhotoAnalysis;
       const clamp = (n: number) => Math.max(0, Math.min(1, n));
       parsed.confidence = clamp(parsed.confidence);
@@ -100,8 +143,7 @@ export const analyzePhoto = createServerFn({ method: "POST" })
       }));
       return { ok: true, analysis: parsed };
     } catch (e) {
-      if (e instanceof GatewayError) console.error("photo analysis failed", e.code, e.ids);
-      else console.error("photo analysis failed", e);
+      console.error("photo analysis failed", e);
       return { ok: false, error: "unavailable" };
     }
   });

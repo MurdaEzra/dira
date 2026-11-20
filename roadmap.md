@@ -1,26 +1,25 @@
 # DIRA roadmap
 
-## Phase 1 — foundations (seeded data)
-- [x] Design system, EN + Swahili, onboarding/profile, home map, Discover, place detail, confidence + fit tests
+## Foundations
 
-## Phase 2 — routing
-- [x] Lovable Cloud tables + seed (places, features, barriers, ramps); app reads them, seed file as offline fallback
-- [ ] Accounts: email + Google sign-in, profile (name + access needs synced), reset password, delete account
-- [ ] OpenRouteService wheelchair routing (server) with avoid_polygons + 3 seeded demo journeys as fallback
-- [ ] 3 route options (Most accessible / Balanced / Fastest), score, adjusted time, effort, flagged segments with trust
-- [ ] Segment-coloured route line with dash patterns, turn-by-turn with access notes
-- [ ] Live reroute when a high-severity barrier is reported near the active route; "Report here" + "I'm stuck"
+- [x] Accessible design system, English + Swahili, onboarding and access profile
+- [x] Supabase-backed Nairobi map, Discover, place details, confidence and fit scoring
+- [x] Email and Google sign-in, saved profile, password reset and account deletion
 
-## Phase 3 — reporting + AI
-- [ ] 3-tap barrier report (type, severity, send), GPS + adjustable pin, temporary toggle, note
-- [ ] Offline queue that syncs later; duplicate merge; rate limit
-- [ ] Photo upload (compressed, EXIF stripped), AI photo analysis (strict JSON), privacy blur of faces/plates
-- [ ] Verification: "Still there?" / "It's gone" on barriers, "Still accurate" / "Something changed" on places
-- [ ] Place photo gallery with AI tags marked unverified
+## Navigation and reporting
 
-## Phase 4 — voice (user asked: complete all phases)
-- [ ] Mic on every screen, intents, spoken + vibration cues
+- [x] Three accessible route choices, route scoring, map lines and turn instructions
+- [x] Live trip progress, barrier alerts, rerouting, report-here and stuck support
+- [x] Barrier reports, photo privacy checks, offline queue, duplicate merge and confirmations
+- [x] Place photo gallery and bilingual reporting flow
 
-## Phase 5 — community + ops
-- [ ] Contributor profiles, badges, leaderboard, impact dashboard, export
-- [ ] Partner portal (claim place), admin moderation, PWA/offline
+## Admin and community
+
+- [x] Admin-only report review and place surveying dashboard
+- [ ] Expand moderation to all community verification activity and add a durable decision audit log
+- [ ] Contributor profiles, badges, leaderboard, impact dashboard and export
+- [ ] Partner portal and installable PWA with broader offline map support
+
+## Voice
+
+- [ ] Voice intents, spoken route cues and vibration guidance

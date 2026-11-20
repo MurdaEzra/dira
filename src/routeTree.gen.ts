@@ -10,14 +10,30 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AccountRouteImport } from './routes/account'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as DiscoverRouteImport } from './routes/discover'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as PhotosRouteImport } from './routes/photos'
+import { Route as PlannerRouteImport } from './routes/planner'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as ReportRouteImport } from './routes/report'
+import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as PlacesPlaceIdRouteImport } from './routes/places.$placeId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DiscoverRoute = DiscoverRouteImport.update({
@@ -30,9 +46,29 @@ const OnboardingRoute = OnboardingRouteImport.update({
   path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PhotosRoute = PhotosRouteImport.update({
+  id: '/photos',
+  path: '/photos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlannerRoute = PlannerRouteImport.update({
+  id: '/planner',
+  path: '/planner',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportRoute = ReportRouteImport.update({
+  id: '/report',
+  path: '/report',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignInRoute = SignInRouteImport.update({
+  id: '/sign-in',
+  path: '/sign-in',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlacesPlaceIdRoute = PlacesPlaceIdRouteImport.update({
@@ -43,45 +79,97 @@ const PlacesPlaceIdRoute = PlacesPlaceIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
+  '/admin': typeof AdminRoute
   '/discover': typeof DiscoverRoute
   '/onboarding': typeof OnboardingRoute
+  '/photos': typeof PhotosRoute
+  '/planner': typeof PlannerRoute
   '/profile': typeof ProfileRoute
+  '/report': typeof ReportRoute
+  '/sign-in': typeof SignInRoute
   '/places/$placeId': typeof PlacesPlaceIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
+  '/admin': typeof AdminRoute
   '/discover': typeof DiscoverRoute
   '/onboarding': typeof OnboardingRoute
+  '/photos': typeof PhotosRoute
+  '/planner': typeof PlannerRoute
   '/profile': typeof ProfileRoute
+  '/report': typeof ReportRoute
+  '/sign-in': typeof SignInRoute
   '/places/$placeId': typeof PlacesPlaceIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
+  '/admin': typeof AdminRoute
   '/discover': typeof DiscoverRoute
   '/onboarding': typeof OnboardingRoute
+  '/photos': typeof PhotosRoute
+  '/planner': typeof PlannerRoute
   '/profile': typeof ProfileRoute
+  '/report': typeof ReportRoute
+  '/sign-in': typeof SignInRoute
   '/places/$placeId': typeof PlacesPlaceIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/discover' | '/onboarding' | '/profile' | '/places/$placeId'
+  fullPaths:
+    | '/'
+    | '/account'
+    | '/admin'
+    | '/discover'
+    | '/onboarding'
+    | '/photos'
+    | '/planner'
+    | '/profile'
+    | '/report'
+    | '/sign-in'
+    | '/places/$placeId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/discover' | '/onboarding' | '/profile' | '/places/$placeId'
+  to:
+    | '/'
+    | '/account'
+    | '/admin'
+    | '/discover'
+    | '/onboarding'
+    | '/photos'
+    | '/planner'
+    | '/profile'
+    | '/report'
+    | '/sign-in'
+    | '/places/$placeId'
   id:
     | '__root__'
     | '/'
+    | '/account'
+    | '/admin'
     | '/discover'
     | '/onboarding'
+    | '/photos'
+    | '/planner'
     | '/profile'
+    | '/report'
+    | '/sign-in'
     | '/places/$placeId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AccountRoute: typeof AccountRoute
+  AdminRoute: typeof AdminRoute
   DiscoverRoute: typeof DiscoverRoute
   OnboardingRoute: typeof OnboardingRoute
+  PhotosRoute: typeof PhotosRoute
+  PlannerRoute: typeof PlannerRoute
   ProfileRoute: typeof ProfileRoute
+  ReportRoute: typeof ReportRoute
+  SignInRoute: typeof SignInRoute
   PlacesPlaceIdRoute: typeof PlacesPlaceIdRoute
 }
 
@@ -92,6 +180,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/discover': {
@@ -108,11 +210,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/photos': {
+      id: '/photos'
+      path: '/photos'
+      fullPath: '/photos'
+      preLoaderRoute: typeof PhotosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/planner': {
+      id: '/planner'
+      path: '/planner'
+      fullPath: '/planner'
+      preLoaderRoute: typeof PlannerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/report': {
+      id: '/report'
+      path: '/report'
+      fullPath: '/report'
+      preLoaderRoute: typeof ReportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sign-in': {
+      id: '/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof SignInRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/places/$placeId': {
@@ -127,9 +257,15 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AccountRoute: AccountRoute,
+  AdminRoute: AdminRoute,
   DiscoverRoute: DiscoverRoute,
   OnboardingRoute: OnboardingRoute,
+  PhotosRoute: PhotosRoute,
+  PlannerRoute: PlannerRoute,
   ProfileRoute: ProfileRoute,
+  ReportRoute: ReportRoute,
+  SignInRoute: SignInRoute,
   PlacesPlaceIdRoute: PlacesPlaceIdRoute,
 }
 export const routeTree = rootRouteImport

@@ -1,7 +1,7 @@
-import { Link, createFileRoute, notFound } from "@tanstack/react-router";
-import { ArrowLeft, MapPin } from "lucide-react";
-import { getPlace } from "@/data/seed";
+﻿import { Link, createFileRoute } from "@tanstack/react-router";
+import { ArrowLeft, MapPin, Images } from "lucide-react";
 import { usePrefs } from "@/lib/prefs";
+import { useCityData, useCityDataStatus } from "@/lib/data";
 import { distanceKm, featureWeights, fitBand, fitScore } from "@/lib/fit";
 import { lastVerified, placeTier } from "@/lib/place";
 import { fmt } from "@/lib/i18n";
@@ -12,25 +12,23 @@ import { FitNumeral } from "@/components/dira/place-row";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/places/$placeId")({
-  loader: ({ params }) => {
-    const place = getPlace(params.placeId);
-    if (!place) throw notFound();
-    return { place };
-  },
-  head: ({ loaderData }) => {
-    const name = loaderData?.place.name ?? "Place";
-    const desc = `Step-free access, lifts, toilets and more at ${name} — every detail with how much you can trust it.`;
-    return {
-      meta: [
-        { title: `${name} accessibility — DIRA` },
-        { name: "description", content: desc },
-        { property: "og:title", content: `${name} accessibility — DIRA` },
-        { property: "og:description", content: desc },
-        { property: "og:type", content: "article" },
-        { name: "twitter:card", content: "summary_large_image" },
-      ],
-    };
-  },
+  loader: ({ params }) => ({ placeId: params.placeId }),
+  head: () => ({
+    meta: [
+      { title: "Place access details — DIRA" },
+      {
+        name: "description",
+        content: "Access details, community evidence and features for this place.",
+      },
+      { property: "og:title", content: "Place access details — DIRA" },
+      {
+        property: "og:description",
+        content: "Access details, community evidence and features for this place.",
+      },
+      { property: "og:type", content: "article" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   notFoundComponent: NotFoundPlace,
   component: PlaceDetail,
 });
@@ -48,8 +46,20 @@ function NotFoundPlace() {
 }
 
 function PlaceDetail() {
-  const { place } = Route.useLoaderData();
+  const { placeId } = Route.useLoaderData();
   const { t, profile, here } = usePrefs();
+  const city = useCityData();
+  const cityStatus = useCityDataStatus();
+  const place = city.places.find((item) => item.id === placeId);
+  if (!place) {
+    if (city.source === "empty")
+      return (
+        <main className="mx-auto max-w-2xl px-5 py-20" role="status">
+          {cityStatus.loading ? t.app.dataLoading : t.app.dataUnavailable}
+        </main>
+      );
+    return <NotFoundPlace />;
+  }
   const score = fitScore(place, profile);
   const band = fitBand(score);
   const weights = featureWeights(profile);
@@ -68,16 +78,13 @@ function PlaceDetail() {
 
       <header className="mt-6">
         <p className="eyebrow text-muted-foreground">
-          {t.catOne[place.category]} · {place.area} ·{" "}
+          {t.catOne[place.category]} Â· {place.area} Â·{" "}
           {fmt(t.discover.away, { n: distanceKm(here, place).toFixed(1) })}
         </p>
         <h1 className="mt-3 max-w-4xl text-5xl font-extrabold sm:text-7xl">{place.name}</h1>
-        <p className="mt-3 inline-block rounded-full bg-coral px-3 py-1 text-sm font-bold text-coral-foreground">
-          {t.app.demo}
-        </p>
       </header>
 
-      {/* Fit — set like a platform number, no box */}
+      {/* Fit â€” set like a platform number, no box */}
       <section
         aria-labelledby="fit-h"
         className="mt-10 grid gap-6 rule-t pt-6 sm:grid-cols-[auto_1fr] sm:items-end sm:gap-10"
@@ -111,6 +118,11 @@ function PlaceDetail() {
               <MapPin aria-hidden /> {t.place.viewOnMap}
             </Link>
           </Button>
+          <Button asChild variant="outline" className="mt-3">
+            <Link to="/photos" search={{ place: place.id }}>
+              <Images aria-hidden /> {t.gallery.title}
+            </Link>
+          </Button>
         </div>
       </section>
 
@@ -135,7 +147,9 @@ function PlaceDetail() {
               >
                 <div>
                   <h3 className="text-xl font-bold">{t.feature[f.key]}</h3>
-                  {important && <p className="eyebrow mt-1 text-signal-ink">● {t.place.matters}</p>}
+                  {important && (
+                    <p className="eyebrow mt-1 text-signal-ink">â— {t.place.matters}</p>
+                  )}
                 </div>
                 <StatusMark status={f.status} />
                 <div>
@@ -163,7 +177,7 @@ function PlaceDetail() {
           </h2>
           <p className="mt-3 text-lg text-muted-foreground">{t.place.trustLede}</p>
           <p className="mt-5 font-mono text-sm leading-relaxed">
-            confidence = source × recency × corroboration × (1 − conflict)
+            confidence = source Ã— recency Ã— corroboration Ã— (1 âˆ’ conflict)
           </p>
           <ul className="mt-4 space-y-1 font-mono text-sm text-muted-foreground">
             {Object.entries(SOURCE_WEIGHTS).map(([k, w]) => (

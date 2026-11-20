@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+﻿import { useEffect, useRef } from "react";
 import {
   Map as MLMap,
   Marker,
@@ -11,6 +11,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import workerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
 import { pinSvg, type PinKind } from "@/components/dira/marks";
 import type { Theme } from "@/lib/types";
+import type { RouteKind } from "@/lib/route-types";
 
 setWorkerUrl(workerUrl);
 
@@ -28,6 +29,8 @@ export interface DiraMapProps {
   items: MapItem[];
   heat: { lat: number; lng: number; weight: number }[];
   showHeat: boolean;
+  routes?: { kind: RouteKind; coords: [number, number][] }[];
+  selectedRoute?: RouteKind;
   selectedId?: string | undefined;
   onSelect: (item: MapItem) => void;
   focus?: { lat: number; lng: number; zoom?: number | undefined; key: number } | undefined;
@@ -99,6 +102,19 @@ function heatGeo(heat: DiraMapProps["heat"]) {
   };
 }
 
+function routeGeo(routes: NonNullable<DiraMapProps["routes"]>, selected?: RouteKind) {
+  return {
+    type: "FeatureCollection" as const,
+    features: routes
+      .filter((r) => r.coords.length > 1)
+      .map((r) => ({
+        type: "Feature" as const,
+        properties: { kind: r.kind, selected: r.kind === selected },
+        geometry: { type: "LineString" as const, coordinates: r.coords },
+      })),
+  };
+}
+
 export default function DiraMap(props: DiraMapProps) {
   const el = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MLMap | null>(null);
@@ -118,12 +134,18 @@ export default function DiraMap(props: DiraMapProps) {
       attributionControl: false,
       cooperativeGestures: false,
     });
+    const markerStore = markers.current;
     map.addControl(new AttributionControl({ compact: true }), "bottom-right");
     map.addControl(new NavigationControl({ showCompass: false }), "bottom-right");
     map.on("style.load", () => {
       const p = latest.current;
       tint(map, p.theme);
       if (!map.getSource("heat")) map.addSource("heat", { type: "geojson", data: heatGeo(p.heat) });
+      if (!map.getSource("routes"))
+        map.addSource("routes", {
+          type: "geojson",
+          data: routeGeo(p.routes ?? [], p.selectedRoute),
+        });
       const c = TINT[p.theme].heat;
       if (!map.getLayer("heat")) {
         map.addLayer({
@@ -151,11 +173,31 @@ export default function DiraMap(props: DiraMapProps) {
           },
         });
       }
+      if (!map.getLayer("routes")) {
+        map.addLayer({
+          id: "routes",
+          type: "line",
+          source: "routes",
+          layout: { "line-cap": "round", "line-join": "round" },
+          paint: {
+            "line-color": [
+              "case",
+              ["==", ["get", "kind"], "accessible"],
+              "#087F68",
+              ["==", ["get", "kind"], "balanced"],
+              "#B35D00",
+              "#6450A4",
+            ],
+            "line-width": ["case", ["get", "selected"], 7, 4],
+            "line-opacity": ["case", ["get", "selected"], 0.95, 0.55],
+          },
+        });
+      }
     });
     mapRef.current = map;
     return () => {
-      markers.current.forEach(({ m }) => m.remove());
-      markers.current.clear();
+      markerStore.forEach(({ m }) => m.remove());
+      markerStore.clear();
       map.remove();
       mapRef.current = null;
     };
@@ -180,6 +222,18 @@ export default function DiraMap(props: DiraMapProps) {
     if (map.getLayer("heat"))
       map.setLayoutProperty("heat", "visibility", props.showHeat ? "visible" : "none");
   }, [props.heat, props.showHeat]);
+
+  // Route alternatives stay in GeoJSON so the map can redraw them after planning and theme changes.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    const update = () => {
+      const source = map.getSource("routes") as GeoJSONSource | undefined;
+      source?.setData(routeGeo(props.routes ?? [], props.selectedRoute));
+    };
+    if (map.isStyleLoaded()) update();
+    else map.once("style.load", update);
+  }, [props.routes, props.selectedRoute]);
 
   // Markers (accessible buttons)
   useEffect(() => {
