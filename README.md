@@ -38,3 +38,6 @@ Set the service-role key in your server host before using admin actions. Do not 
 TanStack Start builds with Nitro's Node server preset. Deploy the repository to a Node host you control, set its environment variables, run `npm run build`, then `npm start`.
 
 The external Lovable project/GitHub association is managed by Lovable and cannot be removed from this local repository. Disconnect that integration in the Lovable project settings if you want the editor to stop syncing this repository.
+
+### Do this from your end(ezra)
+The app still points at its currently configured Supabase project. I can’t unlink the external Lovable/GitHub association or move that backend from this workspace; those are account-side actions. To take full ownership, disconnect the repository in Lovable’s project settings, then set credentials for a Supabase project and Node host you control using the setup in [README.md](/C:/Users/Sylvia Anyango/Desktop/DIRA/dira/README.md). The new self-hosted photo check also needs your own OPENAI_API_KEY set on the server.
