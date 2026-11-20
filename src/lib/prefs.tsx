@@ -1,4 +1,13 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import { DICTS, type Dict } from "./i18n";
 import {
   DEFAULT_DISPLAY,
@@ -65,7 +74,11 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
       if (raw) {
         const s = JSON.parse(raw) as Partial<Stored>;
         setState({
-          profile: { ...DEFAULT_PROFILE, ...s.profile, needs: { ...DEFAULT_PROFILE.needs, ...s.profile?.needs } },
+          profile: {
+            ...DEFAULT_PROFILE,
+            ...s.profile,
+            needs: { ...DEFAULT_PROFILE.needs, ...s.profile?.needs },
+          },
           display: { ...DEFAULT_DISPLAY, ...s.display },
           lang: s.lang === "sw" ? "sw" : "en",
           onboarded: !!s.onboarded,
@@ -100,7 +113,10 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
         setState((s) => {
           const hcChanged = profile.needs.highContrast !== s.profile.needs.highContrast;
           const display = hcChanged
-            ? { ...s.display, theme: profile.needs.highContrast ? ("hc" as const) : ("light" as const) }
+            ? {
+                ...s.display,
+                theme: profile.needs.highContrast ? ("hc" as const) : ("light" as const),
+              }
             : s.display;
           return { ...s, profile, display };
         }),

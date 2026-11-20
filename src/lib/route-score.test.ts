@@ -4,10 +4,24 @@ import { DEFAULT_PROFILE, type Barrier } from "./types";
 import type { RouteOption } from "./route-types";
 
 // A straight 1.1 km east–west line through central Nairobi.
-const coords: [number, number][] = Array.from({ length: 11 }, (_, i) => [36.81 + i * 0.001, -1.285]);
-const route: RouteOption = { kind: "fastest", coords, distance: 1113, duration: 800, steps: [], steepness: [], approx: false };
+const coords: [number, number][] = Array.from({ length: 11 }, (_, i) => [
+  36.81 + i * 0.001,
+  -1.285,
+]);
+const route: RouteOption = {
+  kind: "fastest",
+  coords,
+  distance: 1113,
+  duration: 800,
+  steps: [],
+  steepness: [],
+  approx: false,
+};
 
-function barrier(id: string, over: Partial<Barrier> & { lat?: number; daysAgo?: number } = {}): Barrier {
+function barrier(
+  id: string,
+  over: Partial<Barrier> & { lat?: number; daysAgo?: number } = {},
+): Barrier {
   return {
     id,
     type: "blocked_path",
@@ -16,7 +30,13 @@ function barrier(id: string, over: Partial<Barrier> & { lat?: number; daysAgo?: 
     lat: over.lat ?? -1.285,
     lng: over.lng ?? 36.815,
     status: over.status ?? "community_confirmed",
-    evidence: { source: "community3", daysAgo: over.daysAgo ?? 2, confirmations: 4, conflicts: 0, temporary: false },
+    evidence: {
+      source: "community3",
+      daysAgo: over.daysAgo ?? 2,
+      confirmations: 4,
+      conflicts: 0,
+      temporary: false,
+    },
   };
 }
 
@@ -37,13 +57,20 @@ describe("assessRoute", () => {
     expect(assessRoute(route, [], DEFAULT_PROFILE).score).toBe(100);
   });
   it("a blocking barrier costs more than a low one", () => {
-    const blocking = assessRoute(route, [barrier("a", { severity: "blocking" })], DEFAULT_PROFILE).score;
+    const blocking = assessRoute(
+      route,
+      [barrier("a", { severity: "blocking" })],
+      DEFAULT_PROFILE,
+    ).score;
     const low = assessRoute(route, [barrier("b", { severity: "low" })], DEFAULT_PROFILE).score;
     expect(blocking).toBeLessThan(low);
   });
   it("a manual wheelchair user gets a longer adjusted time than the baseline", () => {
     const base = assessRoute(route, [], DEFAULT_PROFILE).minutes;
-    const wc = assessRoute(route, [], { ...DEFAULT_PROFILE, mobility: ["manual_wheelchair"] }).minutes;
+    const wc = assessRoute(route, [], {
+      ...DEFAULT_PROFILE,
+      mobility: ["manual_wheelchair"],
+    }).minutes;
     expect(wc).toBeGreaterThan(base);
   });
   it("marks slopes steeper than the person's limit as caution", () => {

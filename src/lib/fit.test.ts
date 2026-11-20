@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { fitScore } from "./fit";
-import { DEFAULT_PROFILE, FEATURE_KEYS, type AccessProfile, type FeatureStatus, type Place } from "./types";
+import {
+  DEFAULT_PROFILE,
+  FEATURE_KEYS,
+  type AccessProfile,
+  type FeatureStatus,
+  type Place,
+} from "./types";
 
 function place(overrides: Partial<Record<(typeof FEATURE_KEYS)[number], FeatureStatus>>): Place {
   return {
@@ -32,7 +38,10 @@ describe("fit score", () => {
   });
 
   it("ranks a place lower when a required lift is missing", () => {
-    const needsLift: AccessProfile = { ...DEFAULT_PROFILE, needs: { ...DEFAULT_PROFILE.needs, lift: true } };
+    const needsLift: AccessProfile = {
+      ...DEFAULT_PROFILE,
+      needs: { ...DEFAULT_PROFILE.needs, lift: true },
+    };
     expect(fitScore(place({ lift: "no" }), needsLift)).toBeLessThan(fitScore(place({}), needsLift));
   });
 });

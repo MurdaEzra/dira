@@ -89,7 +89,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "DIRA — Know before you go" },
       {
         name: "description",
-        content: "DIRA: accessible city navigation with crowd-verified access details you can trust.",
+        content:
+          "DIRA: accessible city navigation with crowd-verified access details you can trust.",
       },
       { name: "theme-color", content: "#114B5F" },
       { property: "og:title", content: "DIRA — Know before you go" },

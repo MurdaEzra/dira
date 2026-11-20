@@ -76,12 +76,7 @@ export const BARRIER_TYPES = [
 export type BarrierType = (typeof BARRIER_TYPES)[number];
 export type Severity = "low" | "medium" | "high" | "blocking";
 export type BarrierStatus =
-  | "reported"
-  | "ai_triaged"
-  | "community_confirmed"
-  | "sent_to_authority"
-  | "resolved"
-  | "reopened";
+  "reported" | "ai_triaged" | "community_confirmed" | "sent_to_authority" | "resolved" | "reopened";
 
 export interface Barrier {
   id: string;

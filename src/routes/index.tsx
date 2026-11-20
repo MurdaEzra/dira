@@ -26,12 +26,14 @@ export const Route = createFileRoute("/")({
       { title: "DIRA — Accessible map of Nairobi" },
       {
         name: "description",
-        content: "See step-free places, verified ramps and reported barriers on one map, ranked for your access needs.",
+        content:
+          "See step-free places, verified ramps and reported barriers on one map, ranked for your access needs.",
       },
       { property: "og:title", content: "DIRA — Accessible map of Nairobi" },
       {
         property: "og:description",
-        content: "Step-free places, verified ramps and reported barriers, ranked for your access needs.",
+        content:
+          "Step-free places, verified ramps and reported barriers, ranked for your access needs.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -50,8 +52,15 @@ function Home() {
   const scored = useScoredPlaces();
   const [cat, setCat] = useState<Category | "all">("all");
   const [q, setQ] = useState("");
-  const [layers, setLayers] = useState<Record<Layer, boolean>>({ places: true, barriers: true, ramps: true, heat: false });
-  const [selected, setSelected] = useState<string | undefined>(search.place ? `place:${search.place}` : undefined);
+  const [layers, setLayers] = useState<Record<Layer, boolean>>({
+    places: true,
+    barriers: true,
+    ramps: true,
+    heat: false,
+  });
+  const [selected, setSelected] = useState<string | undefined>(
+    search.place ? `place:${search.place}` : undefined,
+  );
   const [focus, setFocus] = useState<{ lat: number; lng: number; zoom?: number; key: number }>();
   const [open, setOpen] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
@@ -181,7 +190,10 @@ function Home() {
         >
           <span aria-hidden className="h-1.5 w-12 rounded-full bg-foreground/40" />
           <span className="flex items-center gap-1.5 text-sm font-semibold">
-            <ChevronUp aria-hidden className={cn("size-4 transition-transform", open && "rotate-180")} />
+            <ChevronUp
+              aria-hidden
+              className={cn("size-4 transition-transform", open && "rotate-180")}
+            />
             {open ? t.map.hideList : `${t.map.showList} · ${visible.length}`}
           </span>
         </button>
@@ -199,7 +211,10 @@ function Home() {
               {t.map.searchLabel}
             </label>
             <div className="relative">
-              <Search aria-hidden className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" />
+              <Search
+                aria-hidden
+                className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground"
+              />
               <input
                 id="map-search"
                 type="search"
@@ -211,9 +226,21 @@ function Home() {
               />
             </div>
           </form>
-          <div role="group" aria-label={t.discover.category} className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 lg:mx-0 lg:flex-wrap lg:px-0">
+          <div
+            role="group"
+            aria-label={t.discover.category}
+            className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 lg:mx-0 lg:flex-wrap lg:px-0"
+          >
             {(["all", ...CATEGORIES] as const).map((c) => (
-              <Button key={c} type="button" variant="chip" size="sm" aria-pressed={cat === c} onClick={() => setCat(c)} className="shrink-0">
+              <Button
+                key={c}
+                type="button"
+                variant="chip"
+                size="sm"
+                aria-pressed={cat === c}
+                onClick={() => setCat(c)}
+                className="shrink-0"
+              >
                 {c === "all" ? t.map.allCategories : t.cat[c]}
               </Button>
             ))}
@@ -223,10 +250,16 @@ function Home() {
         <div
           id="place-list"
           ref={listRef}
-          className={cn("min-h-0 flex-1 overflow-y-auto px-4 pb-6 lg:block lg:px-6", !open && "hidden")}
+          className={cn(
+            "min-h-0 flex-1 overflow-y-auto px-4 pb-6 lg:block lg:px-6",
+            !open && "hidden",
+          )}
         >
           {(selPlace || selBarrier || selRamp) && (
-            <div className="rise rule-t rule-b relative -mx-4 bg-paper-deep px-4 py-5 lg:-mx-6 lg:px-6" aria-live="polite">
+            <div
+              className="rise rule-t rule-b relative -mx-4 bg-paper-deep px-4 py-5 lg:-mx-6 lg:px-6"
+              aria-live="polite"
+            >
               <button
                 type="button"
                 onClick={() => setSelected(undefined)}
@@ -270,7 +303,13 @@ function Home() {
                   <div>
                     <h2 className="text-2xl font-bold">{t.barrier[selBarrier.type]}</h2>
                     <p className="mt-1 font-semibold">
-                      <span className={cn(selBarrier.severity === "blocking" || selBarrier.severity === "high" ? "text-coral-ink" : "")}>
+                      <span
+                        className={cn(
+                          selBarrier.severity === "blocking" || selBarrier.severity === "high"
+                            ? "text-coral-ink"
+                            : "",
+                        )}
+                      >
                         {t.severity[selBarrier.severity]}
                       </span>{" "}
                       · {t.bstatus[selBarrier.status]} · {selBarrier.area}
@@ -286,7 +325,9 @@ function Home() {
                 <div className="mt-2 flex items-start gap-4 pr-8">
                   <PinGlyph kind="ramp" />
                   <div>
-                    <h2 className="text-2xl font-bold">{selRamp.kind === "ramp" ? t.map.rampKind : t.map.entranceKind}</h2>
+                    <h2 className="text-2xl font-bold">
+                      {selRamp.kind === "ramp" ? t.map.rampKind : t.map.entranceKind}
+                    </h2>
                     <p className="text-muted-foreground">{selRamp.area}</p>
                     <div className="mt-1.5 flex flex-wrap items-baseline gap-x-3">
                       <TierMark tier={tier(selRamp.evidence)} compact />
@@ -300,7 +341,9 @@ function Home() {
 
           <div className="flex items-baseline justify-between pt-5">
             <h2 className="text-2xl font-extrabold">{t.map.nearby}</h2>
-            <span className="eyebrow text-muted-foreground">{fmt(t.discover.results, { n: visible.length })}</span>
+            <span className="eyebrow text-muted-foreground">
+              {fmt(t.discover.results, { n: visible.length })}
+            </span>
           </div>
           {visible.length === 0 ? (
             <p className="py-8 text-lg">{t.map.noResults}</p>
@@ -365,7 +408,10 @@ function Home() {
                   <li key={k}>
                     <label className="flex min-h-12 cursor-pointer items-center justify-between gap-3">
                       <span className="font-medium">{label}</span>
-                      <Switch checked={layers[k]} onCheckedChange={(v) => setLayers((l) => ({ ...l, [k]: v }))} />
+                      <Switch
+                        checked={layers[k]}
+                        onCheckedChange={(v) => setLayers((l) => ({ ...l, [k]: v }))}
+                      />
                     </label>
                   </li>
                 ))}

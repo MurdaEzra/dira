@@ -8,7 +8,11 @@ import { Wordmark } from "./wordmark";
 function LangSwitch() {
   const { lang, setLang, t } = usePrefs();
   return (
-    <div role="group" aria-label={t.lang.label} className="flex rounded-full border-[length:var(--rule-w)] border-rule p-0.5">
+    <div
+      role="group"
+      aria-label={t.lang.label}
+      className="flex rounded-full border-[length:var(--rule-w)] border-rule p-0.5"
+    >
       {(["en", "sw"] as const).map((l) => (
         <button
           key={l}
@@ -43,7 +47,9 @@ export function AppShell({ children }: { children: ReactNode }) {
         <Link to="/" className="tap flex items-center rounded-lg" aria-label="DIRA — home">
           <Wordmark />
         </Link>
-        <span className="hidden font-display text-lg italic text-muted-foreground xl:inline">{t.app.tagline}</span>
+        <span className="hidden font-display text-lg italic text-muted-foreground xl:inline">
+          {t.app.tagline}
+        </span>
         <nav aria-label={t.nav.primary} className="ml-auto hidden lg:block">
           <ul className="flex items-center gap-1">
             {NAV.map(({ to, key, Icon }) => (

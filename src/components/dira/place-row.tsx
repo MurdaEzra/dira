@@ -9,9 +9,23 @@ import { EvidenceLine, PinGlyph, TierMark } from "./marks";
 
 const BAND_TEXT = { good: "text-signal-ink", partial: "text-foreground", poor: "text-coral-ink" };
 
-export function FitNumeral({ score, band, size = "md" }: { score: number; band: ScoredPlace["band"]; size?: "md" | "xl" }) {
+export function FitNumeral({
+  score,
+  band,
+  size = "md",
+}: {
+  score: number;
+  band: ScoredPlace["band"];
+  size?: "md" | "xl";
+}) {
   return (
-    <span className={cn("numeral tabular-nums", BAND_TEXT[band], size === "xl" ? "text-[7rem] sm:text-[9rem]" : "text-5xl")}>
+    <span
+      className={cn(
+        "numeral tabular-nums",
+        BAND_TEXT[band],
+        size === "xl" ? "text-[7rem] sm:text-[9rem]" : "text-5xl",
+      )}
+    >
       {score}
     </span>
   );
@@ -32,7 +46,8 @@ export function PlaceRow({ item, onLocate, selected, dense }: Props) {
     <li
       className={cn(
         "group relative grid grid-cols-[4.25rem_1fr] gap-x-4 py-5 sm:grid-cols-[5rem_1fr_auto]",
-        selected && "before:absolute before:inset-y-3 before:-left-4 before:w-1.5 before:rounded-full before:bg-signal lg:before:-left-6",
+        selected &&
+          "before:absolute before:inset-y-3 before:-left-4 before:w-1.5 before:rounded-full before:bg-signal lg:before:-left-6",
       )}
     >
       <div className="flex flex-col items-start pt-1">
@@ -57,9 +72,18 @@ export function PlaceRow({ item, onLocate, selected, dense }: Props) {
           <ul className={cn("mt-2 flex flex-wrap gap-x-4 gap-y-1", dense && "text-sm")}>
             {feats.map((f) => (
               <li key={f.key} className="inline-flex items-center gap-1.5">
-                <Check aria-hidden className={cn("size-4", f.status === "yes" ? "text-signal-ink" : "text-muted-foreground")} strokeWidth={3} />
+                <Check
+                  aria-hidden
+                  className={cn(
+                    "size-4",
+                    f.status === "yes" ? "text-signal-ink" : "text-muted-foreground",
+                  )}
+                  strokeWidth={3}
+                />
                 {t.feature[f.key]}
-                {f.status === "partial" && <span className="text-muted-foreground">({t.status.partial.toLowerCase()})</span>}
+                {f.status === "partial" && (
+                  <span className="text-muted-foreground">({t.status.partial.toLowerCase()})</span>
+                )}
               </li>
             ))}
           </ul>

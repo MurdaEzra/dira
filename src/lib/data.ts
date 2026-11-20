@@ -27,11 +27,23 @@ export interface CityData {
   source: "cloud" | "seed";
 }
 
-export const SEED_CITY: CityData = { places: PLACES, barriers: BARRIERS, accessPoints: ACCESS_POINTS, source: "seed" };
+export const SEED_CITY: CityData = {
+  places: PLACES,
+  barriers: BARRIERS,
+  accessPoints: ACCESS_POINTS,
+  source: "seed",
+};
 
 const SOURCES: Source[] = ["official", "audited", "community3", "community", "osm", "ai"];
 const SEVERITIES: Severity[] = ["low", "medium", "high", "blocking"];
-const BSTATUS: BarrierStatus[] = ["reported", "ai_triaged", "community_confirmed", "sent_to_authority", "resolved", "reopened"];
+const BSTATUS: BarrierStatus[] = [
+  "reported",
+  "ai_triaged",
+  "community_confirmed",
+  "sent_to_authority",
+  "resolved",
+  "reopened",
+];
 const FSTATUS: FeatureStatus[] = ["yes", "partial", "no", "unknown"];
 
 function pick<T extends string>(list: readonly T[], v: string, fallback: T): T {
@@ -44,7 +56,10 @@ export function daysSince(iso: string, now = Date.now()) {
 
 async function fetchCity(): Promise<CityData> {
   const [p, b, a] = await Promise.all([
-    supabase.from("places").select("id, name, category, area, lat, lng, place_features(*)").order("name"),
+    supabase
+      .from("places")
+      .select("id, name, category, area, lat, lng, place_features(*)")
+      .order("name"),
     supabase.from("barriers").select("*").order("created_at", { ascending: false }).limit(1000),
     supabase.from("access_points").select("*"),
   ]);

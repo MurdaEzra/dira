@@ -45,10 +45,28 @@ const STYLE: Record<Theme, string> = {
 };
 
 /** Map-canvas tints matched to the DIRA palette (map styles need plain colour strings). */
-const TINT: Record<Theme, { land: string; water: string; park: string; heat: [string, string, string, string] }> = {
-  light: { land: "#EEFCEB", water: "#BFD0E2", park: "#D2F3CD", heat: ["#F45B6900", "#F9B4A8", "#F45B69", "#B8283A"] },
-  dark: { land: "#0E3341", water: "#173F58", park: "#123F44", heat: ["#F45B6900", "#8A3A4A", "#F45B69", "#FFC2C8"] },
-  hc: { land: "#05141A", water: "#0A2A40", park: "#05141A", heat: ["#F45B6900", "#B23A4A", "#FF6F7D", "#FFFFFF"] },
+const TINT: Record<
+  Theme,
+  { land: string; water: string; park: string; heat: [string, string, string, string] }
+> = {
+  light: {
+    land: "#EEFCEB",
+    water: "#BFD0E2",
+    park: "#D2F3CD",
+    heat: ["#F45B6900", "#F9B4A8", "#F45B69", "#B8283A"],
+  },
+  dark: {
+    land: "#0E3341",
+    water: "#173F58",
+    park: "#123F44",
+    heat: ["#F45B6900", "#8A3A4A", "#F45B69", "#FFC2C8"],
+  },
+  hc: {
+    land: "#05141A",
+    water: "#0A2A40",
+    park: "#05141A",
+    heat: ["#F45B6900", "#B23A4A", "#FF6F7D", "#FFFFFF"],
+  },
 };
 
 function tint(map: MLMap, theme: Theme) {
@@ -57,8 +75,12 @@ function tint(map: MLMap, theme: Theme) {
     const id = layer.id.toLowerCase();
     try {
       if (layer.type === "background") map.setPaintProperty(layer.id, "background-color", c.land);
-      else if (layer.type === "fill" && id.includes("water")) map.setPaintProperty(layer.id, "fill-color", c.water);
-      else if (layer.type === "fill" && (id.includes("park") || id.includes("wood") || id.includes("grass")))
+      else if (layer.type === "fill" && id.includes("water"))
+        map.setPaintProperty(layer.id, "fill-color", c.water);
+      else if (
+        layer.type === "fill" &&
+        (id.includes("park") || id.includes("wood") || id.includes("grass"))
+      )
         map.setPaintProperty(layer.id, "fill-color", c.park);
     } catch {
       /* some layers use expressions we leave alone */
@@ -117,10 +139,14 @@ export default function DiraMap(props: DiraMapProps) {
               "interpolate",
               ["linear"],
               ["heatmap-density"],
-              0, c[0],
-              0.3, c[1],
-              0.65, c[2],
-              1, c[3],
+              0,
+              c[0],
+              0.3,
+              c[1],
+              0.65,
+              c[2],
+              1,
+              c[3],
             ],
           },
         });
@@ -151,7 +177,8 @@ export default function DiraMap(props: DiraMapProps) {
     if (!map) return;
     const src = map.getSource("heat") as GeoJSONSource | undefined;
     src?.setData(heatGeo(props.heat));
-    if (map.getLayer("heat")) map.setLayoutProperty("heat", "visibility", props.showHeat ? "visible" : "none");
+    if (map.getLayer("heat"))
+      map.setLayoutProperty("heat", "visibility", props.showHeat ? "visible" : "none");
   }, [props.heat, props.showHeat]);
 
   // Markers (accessible buttons)

@@ -16,10 +16,14 @@ export const Route = createFileRoute("/discover")({
       { title: "Discover accessible places — DIRA" },
       {
         name: "description",
-        content: "Find restaurants, hospitals, campuses and transport in Nairobi ranked by how well they fit your access needs.",
+        content:
+          "Find restaurants, hospitals, campuses and transport in Nairobi ranked by how well they fit your access needs.",
       },
       { property: "og:title", content: "Discover accessible places — DIRA" },
-      { property: "og:description", content: "Places in Nairobi ranked by how well they fit your access needs." },
+      {
+        property: "og:description",
+        content: "Places in Nairobi ranked by how well they fit your access needs.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -71,12 +75,21 @@ function Discover() {
       </header>
 
       <div className="mt-10 grid gap-10 lg:grid-cols-[18rem_1fr]">
-        <aside aria-label="Filters" className="space-y-8 lg:sticky lg:top-[calc(var(--header-h)+2rem)] lg:self-start">
+        <aside
+          aria-label="Filters"
+          className="space-y-8 lg:sticky lg:top-[calc(var(--header-h)+2rem)] lg:self-start"
+        >
           <fieldset>
             <legend className="eyebrow mb-3 text-muted-foreground">{t.discover.category}</legend>
             <div className="flex flex-wrap gap-2">
               {(["all", ...CATEGORIES] as const).map((c) => (
-                <Button key={c} variant="chip" size="sm" aria-pressed={cat === c} onClick={() => setCat(c)}>
+                <Button
+                  key={c}
+                  variant="chip"
+                  size="sm"
+                  aria-pressed={cat === c}
+                  onClick={() => setCat(c)}
+                >
                   {c === "all" ? t.map.allCategories : t.cat[c]}
                 </Button>
               ))}
@@ -92,7 +105,9 @@ function Discover() {
                   variant="chip"
                   size="sm"
                   aria-pressed={must.includes(k)}
-                  onClick={() => setMust((m) => (m.includes(k) ? m.filter((x) => x !== k) : [...m, k]))}
+                  onClick={() =>
+                    setMust((m) => (m.includes(k) ? m.filter((x) => x !== k) : [...m, k]))
+                  }
                 >
                   {t.feature[k]}
                 </Button>
@@ -108,11 +123,23 @@ function Discover() {
                   key={tr}
                   className={cn(
                     "flex min-h-12 cursor-pointer items-center gap-3 rounded-full px-4 has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-ring",
-                    minTier === tr ? "bg-primary text-primary-foreground [&_*]:text-primary-foreground" : "hover:bg-accent",
+                    minTier === tr
+                      ? "bg-primary text-primary-foreground [&_*]:text-primary-foreground"
+                      : "hover:bg-accent",
                   )}
                 >
-                  <input type="radio" name="min-tier" className="sr-only" checked={minTier === tr} onChange={() => setMinTier(tr)} />
-                  {tr === "any" ? <span className="font-semibold">{t.discover.any}</span> : <TierMark tier={tr} />}
+                  <input
+                    type="radio"
+                    name="min-tier"
+                    className="sr-only"
+                    checked={minTier === tr}
+                    onChange={() => setMinTier(tr)}
+                  />
+                  {tr === "any" ? (
+                    <span className="font-semibold">{t.discover.any}</span>
+                  ) : (
+                    <TierMark tier={tr} />
+                  )}
                 </label>
               ))}
             </div>

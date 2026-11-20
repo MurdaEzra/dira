@@ -13,9 +13,15 @@ export const Route = createFileRoute("/profile")({
   head: () => ({
     meta: [
       { title: "My access profile & display — DIRA" },
-      { name: "description", content: "Edit your mobility, limits, needs, colours, text size and language in DIRA." },
+      {
+        name: "description",
+        content: "Edit your mobility, limits, needs, colours, text size and language in DIRA.",
+      },
       { property: "og:title", content: "My access profile & display — DIRA" },
-      { property: "og:description", content: "Edit your mobility, limits, needs, colours, text size and language." },
+      {
+        property: "og:description",
+        content: "Edit your mobility, limits, needs, colours, text size and language.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -25,7 +31,10 @@ export const Route = createFileRoute("/profile")({
 
 function Section({ n, title, children }: { n: string; title: string; children: React.ReactNode }) {
   return (
-    <section aria-labelledby={`s-${n}`} className="grid gap-6 rule-t pt-6 lg:grid-cols-[14rem_1fr] lg:gap-12">
+    <section
+      aria-labelledby={`s-${n}`}
+      className="grid gap-6 rule-t pt-6 lg:grid-cols-[14rem_1fr] lg:gap-12"
+    >
       <div className="flex items-baseline gap-3 lg:flex-col lg:gap-1">
         <span className="numeral text-6xl text-coral" aria-hidden>
           {n}
@@ -49,7 +58,8 @@ function Sub({ title, children }: { title: string; children: React.ReactNode }) 
 }
 
 function Profile() {
-  const { t, profile, setProfile, display, setDisplay, lang, setLang, announce, hydrated } = usePrefs();
+  const { t, profile, setProfile, display, setDisplay, lang, setLang, announce, hydrated } =
+    usePrefs();
   const ready = useRef(false);
 
   // Confirm every change for screen-reader users.
@@ -98,7 +108,11 @@ function Profile() {
 
         <Section n="02" title={t.profile.display}>
           <Sub title={t.profile.theme}>
-            <div role="radiogroup" aria-label={t.profile.theme} className="grid gap-3 sm:grid-cols-3">
+            <div
+              role="radiogroup"
+              aria-label={t.profile.theme}
+              className="grid gap-3 sm:grid-cols-3"
+            >
               {themes.map(([v, label]) => (
                 <button
                   key={v}
@@ -155,13 +169,19 @@ function Profile() {
                   <span className="block text-lg font-semibold">{t.profile.readable}</span>
                   <span className="block text-muted-foreground">{t.profile.readableHint}</span>
                 </span>
-                <Switch checked={display.readable} onCheckedChange={(v) => setDisplay({ readable: v })} />
+                <Switch
+                  checked={display.readable}
+                  onCheckedChange={(v) => setDisplay({ readable: v })}
+                />
               </label>
             </li>
             <li>
               <label className="flex min-h-16 cursor-pointer items-center justify-between gap-4 py-3 text-lg font-semibold">
                 {t.profile.reduceMotion}
-                <Switch checked={display.reduceMotion} onCheckedChange={(v) => setDisplay({ reduceMotion: v })} />
+                <Switch
+                  checked={display.reduceMotion}
+                  onCheckedChange={(v) => setDisplay({ reduceMotion: v })}
+                />
               </label>
             </li>
           </ul>

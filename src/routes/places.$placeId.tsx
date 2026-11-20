@@ -68,14 +68,20 @@ function PlaceDetail() {
 
       <header className="mt-6">
         <p className="eyebrow text-muted-foreground">
-          {t.catOne[place.category]} · {place.area} · {fmt(t.discover.away, { n: distanceKm(here, place).toFixed(1) })}
+          {t.catOne[place.category]} · {place.area} ·{" "}
+          {fmt(t.discover.away, { n: distanceKm(here, place).toFixed(1) })}
         </p>
         <h1 className="mt-3 max-w-4xl text-5xl font-extrabold sm:text-7xl">{place.name}</h1>
-        <p className="mt-3 inline-block rounded-full bg-coral px-3 py-1 text-sm font-bold text-coral-foreground">{t.app.demo}</p>
+        <p className="mt-3 inline-block rounded-full bg-coral px-3 py-1 text-sm font-bold text-coral-foreground">
+          {t.app.demo}
+        </p>
       </header>
 
       {/* Fit — set like a platform number, no box */}
-      <section aria-labelledby="fit-h" className="mt-10 grid gap-6 rule-t pt-6 sm:grid-cols-[auto_1fr] sm:items-end sm:gap-10">
+      <section
+        aria-labelledby="fit-h"
+        className="mt-10 grid gap-6 rule-t pt-6 sm:grid-cols-[auto_1fr] sm:items-end sm:gap-10"
+      >
         <div className="flex items-end gap-3">
           <FitNumeral score={score} band={band} size="xl" />
           <span className="mb-4 font-display text-2xl font-bold text-muted-foreground">/100</span>
@@ -88,7 +94,10 @@ function PlaceDetail() {
           {!hasProfile && (
             <p className="mt-2">
               {t.place.noProfile}{" "}
-              <Link to="/onboarding" className="font-semibold underline decoration-2 underline-offset-4">
+              <Link
+                to="/onboarding"
+                className="font-semibold underline decoration-2 underline-offset-4"
+              >
                 {t.place.setProfile}
               </Link>
             </p>
@@ -120,7 +129,8 @@ function PlaceDetail() {
                 key={f.key}
                 className={cn(
                   "relative grid gap-x-6 gap-y-2 py-5 sm:grid-cols-[minmax(0,1.2fr)_8rem_minmax(0,1.4fr)] sm:items-center",
-                  important && "before:absolute before:inset-y-4 before:-left-4 before:w-1.5 before:rounded-full before:bg-signal",
+                  important &&
+                    "before:absolute before:inset-y-4 before:-left-4 before:w-1.5 before:rounded-full before:bg-signal",
                 )}
               >
                 <div>
@@ -143,7 +153,10 @@ function PlaceDetail() {
         </ul>
       </section>
 
-      <section aria-labelledby="trust-h" className="mt-16 grid gap-8 rule-t pt-8 lg:grid-cols-[1fr_1.3fr]">
+      <section
+        aria-labelledby="trust-h"
+        className="mt-16 grid gap-8 rule-t pt-8 lg:grid-cols-[1fr_1.3fr]"
+      >
         <div>
           <h2 id="trust-h" className="text-3xl font-extrabold">
             {t.place.trust}

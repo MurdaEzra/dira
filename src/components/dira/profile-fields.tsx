@@ -127,8 +127,19 @@ function Segmented<T extends string>({
               value === v && "bg-primary text-primary-foreground",
             )}
           >
-            <input type="radio" className="sr-only" checked={value === v} onChange={() => onChange(v)} />
-            <span aria-hidden className={cn("size-4 rounded-full border-2 border-current", value === v && "bg-current")} />
+            <input
+              type="radio"
+              className="sr-only"
+              checked={value === v}
+              onChange={() => onChange(v)}
+            />
+            <span
+              aria-hidden
+              className={cn(
+                "size-4 rounded-full border-2 border-current",
+                value === v && "bg-current",
+              )}
+            />
             {label}
           </label>
         ))}
@@ -141,9 +152,33 @@ export function LimitsFields({ value, onChange }: P) {
   const { t } = usePrefs();
   return (
     <div className="divide-y-[length:var(--rule-w)] divide-border">
-      <SliderRow label={t.profile.maxSlope} value={value.maxSlope} min={2} max={12} step={1} unit="%" onChange={(n) => onChange({ ...value, maxSlope: n })} />
-      <SliderRow label={t.profile.minWidth} value={value.minWidth} min={60} max={150} step={5} unit="cm" onChange={(n) => onChange({ ...value, minWidth: n })} />
-      <SliderRow label={t.profile.maxKerb} value={value.maxKerb} min={0} max={10} step={1} unit="cm" onChange={(n) => onChange({ ...value, maxKerb: n })} />
+      <SliderRow
+        label={t.profile.maxSlope}
+        value={value.maxSlope}
+        min={2}
+        max={12}
+        step={1}
+        unit="%"
+        onChange={(n) => onChange({ ...value, maxSlope: n })}
+      />
+      <SliderRow
+        label={t.profile.minWidth}
+        value={value.minWidth}
+        min={60}
+        max={150}
+        step={5}
+        unit="cm"
+        onChange={(n) => onChange({ ...value, minWidth: n })}
+      />
+      <SliderRow
+        label={t.profile.maxKerb}
+        value={value.maxKerb}
+        min={0}
+        max={10}
+        step={1}
+        unit="cm"
+        onChange={(n) => onChange({ ...value, maxKerb: n })}
+      />
       <Segmented
         legend={t.profile.surface}
         value={value.surface}

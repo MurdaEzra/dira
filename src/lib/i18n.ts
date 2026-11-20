@@ -25,7 +25,15 @@ type Dict = {
   severity: Record<Severity, string>;
   bstatus: Record<BarrierStatus, string>;
   mobility: Record<MobilityType, string>;
-  time: { today: string; days: string; confirmations: string; confirmation: string; lastConfirmed: string; recheck: string; expired: string };
+  time: {
+    today: string;
+    days: string;
+    confirmations: string;
+    confirmation: string;
+    lastConfirmed: string;
+    recheck: string;
+    expired: string;
+  };
   map: {
     search: string;
     searchLabel: string;
@@ -316,7 +324,8 @@ const en: Dict = {
     back: "Back",
     finish: "Start exploring",
     s1title: "How do you get around?",
-    s1lede: "Pick everything that applies. This stays on your device and you can change it any time.",
+    s1lede:
+      "Pick everything that applies. This stays on your device and you can change it any time.",
     s2title: "What are your limits?",
     s2lede: "DIRA will warn you, or route around, anything beyond these.",
     s3title: "What do you need at a place?",
@@ -516,7 +525,8 @@ const sw: Dict = {
     fitFor: "Ufaafu kwako",
     fitExplain: "Kulingana na wasifu wako wa ufikiaji na jinsi tunavyoamini kila taarifa.",
     checklist: "Orodha ya ufikiaji",
-    checklistLede: "Kila mstari unaonyesha tunachojua, tuna uhakika kiasi gani, na lini kilikaguliwa mwisho.",
+    checklistLede:
+      "Kila mstari unaonyesha tunachojua, tuna uhakika kiasi gani, na lini kilikaguliwa mwisho.",
     trust: "Jinsi uaminifu unavyofanya kazi",
     trustLede:
       "Kila taarifa hupata uaminifu kutoka chanzo chake, ilithibitishwa lini, na watu wangapi wanakubali. Kutokubaliana hupunguza uaminifu.",
@@ -535,7 +545,8 @@ const sw: Dict = {
     back: "Rudi",
     finish: "Anza kugundua",
     s1title: "Unasafiri vipi?",
-    s1lede: "Chagua yote yanayokuhusu. Hii inabaki kwenye kifaa chako na unaweza kubadilisha wakati wowote.",
+    s1lede:
+      "Chagua yote yanayokuhusu. Hii inabaki kwenye kifaa chako na unaweza kubadilisha wakati wowote.",
     s2title: "Mipaka yako ni ipi?",
     s2lede: "DIRA itakuonya, au kukuelekeza mbali na, chochote kinachozidi haya.",
     s3title: "Unahitaji nini mahali unapoenda?",

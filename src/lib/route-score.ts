@@ -28,7 +28,8 @@ export function nearestOnLine(coords: [number, number][], p: { lat: number; lng:
     const d = M_PER_DEG * Math.hypot(px - (ax + t * dx), py - (ay + t * dy));
     if (d < best.d) best = { d, index: t < 0.5 ? i : i + 1 };
   }
-  if (coords.length === 1) best = { d: metersBetween(p, { lng: coords[0]![0], lat: coords[0]![1] }), index: 0 };
+  if (coords.length === 1)
+    best = { d: metersBetween(p, { lng: coords[0]![0], lat: coords[0]![1] }), index: 0 };
   return best;
 }
 
@@ -44,7 +45,9 @@ export function avoidPoints(barriers: Barrier[], level: "strict" | "balanced"): 
       const c = confidence(b.evidence);
       if (level === "strict") return b.severity !== "low" && c >= 0.2;
       const trusted: Tier[] = ["verified", "community"];
-      return (b.severity === "blocking" || b.severity === "high") && trusted.includes(tier(b.evidence));
+      return (
+        (b.severity === "blocking" || b.severity === "high") && trusted.includes(tier(b.evidence))
+      );
     })
     .slice(0, 60)
     .map((b) => ({ lat: b.lat, lng: b.lng }));
@@ -59,13 +62,23 @@ export interface FlaggedBarrier {
 }
 
 /** Active barriers within `radius` metres of the route line, in route order. */
-export function flagBarriers(coords: [number, number][], barriers: Barrier[], radius = 25): FlaggedBarrier[] {
+export function flagBarriers(
+  coords: [number, number][],
+  barriers: Barrier[],
+  radius = 25,
+): FlaggedBarrier[] {
   if (coords.length === 0) return [];
   return barriers
     .filter(isActive)
     .map((barrier) => {
       const n = nearestOnLine(coords, barrier);
-      return { barrier, index: n.index, meters: n.d, confidence: confidence(barrier.evidence), tier: tier(barrier.evidence) };
+      return {
+        barrier,
+        index: n.index,
+        meters: n.d,
+        confidence: confidence(barrier.evidence),
+        tier: tier(barrier.evidence),
+      };
     })
     .filter((f) => f.meters <= radius)
     .sort((a, b) => a.index - b.index);
@@ -87,7 +100,8 @@ export function slopeClass(maxSlope: number) {
 export function speedFactor(p: AccessProfile) {
   const m = p.mobility;
   if (m.includes("manual_wheelchair")) return 0.8;
-  if (m.includes("walking_aid") || m.includes("older_adult") || m.includes("temporary")) return 0.65;
+  if (m.includes("walking_aid") || m.includes("older_adult") || m.includes("temporary"))
+    return 0.65;
   if (m.includes("blind_low_vision")) return 0.75;
   if (m.includes("stroller")) return 0.9;
   return 1;
@@ -115,7 +129,11 @@ function segLen(coords: [number, number][], i: number) {
   return metersBetween({ lng: a[0], lat: a[1] }, { lng: b[0], lat: b[1] });
 }
 
-export function assessRoute(route: RouteOption, barriers: Barrier[], profile: AccessProfile): RouteAssessment {
+export function assessRoute(
+  route: RouteOption,
+  barriers: Barrier[],
+  profile: AccessProfile,
+): RouteAssessment {
   const flagged = flagBarriers(route.coords, barriers);
   const n = Math.max(0, route.coords.length - 1);
   const kinds: SegmentKind[] = new Array(n).fill("ok");
@@ -141,13 +159,29 @@ export function assessRoute(route: RouteOption, barriers: Barrier[], profile: Ac
   });
 
   const steepShare = route.distance > 0 ? steepMeters / route.distance : 0;
-  const barrierPenalty = flagged.reduce((s, f) => s + SEV_PENALTY[f.barrier.severity] * Math.max(0.35, f.confidence), 0);
-  const score = Math.round(Math.max(0, Math.min(100, 100 - barrierPenalty - Math.min(30, steepShare * 120))));
+  const barrierPenalty = flagged.reduce(
+    (s, f) => s + SEV_PENALTY[f.barrier.severity] * Math.max(0.35, f.confidence),
+    0,
+  );
+  const score = Math.round(
+    Math.max(0, Math.min(100, 100 - barrierPenalty - Math.min(30, steepShare * 120))),
+  );
 
-  const delay = flagged.reduce((s, f) => s + SEV_MINUTES[f.barrier.severity] * Math.max(0.35, f.confidence), 0);
-  const minutes = Math.max(1, Math.round(route.duration / 60 / speedFactor(profile) + delay + steepMeters / 60));
+  const delay = flagged.reduce(
+    (s, f) => s + SEV_MINUTES[f.barrier.severity] * Math.max(0.35, f.confidence),
+    0,
+  );
+  const minutes = Math.max(
+    1,
+    Math.round(route.duration / 60 / speedFactor(profile) + delay + steepMeters / 60),
+  );
 
-  const effort = steepShare > 0.15 || route.distance > 2500 ? "high" : steepShare > 0.05 || route.distance > 1200 ? "moderate" : "low";
+  const effort =
+    steepShare > 0.15 || route.distance > 2500
+      ? "high"
+      : steepShare > 0.05 || route.distance > 1200
+        ? "moderate"
+        : "low";
 
   return { score, minutes, effort, steepMeters: Math.round(steepMeters), flagged, segments };
 }
